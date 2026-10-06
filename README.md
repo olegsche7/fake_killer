@@ -1,20 +1,22 @@
-# 🧬 Fake Killer (Pattern AI v8.5)
+# 🧬 Fake Killer (Pattern AI v8.6)
 
-**AI hallucination detector with 0% hallucinations. Neuro-symbolic system that catches fake facts, logical contradictions, and manipulations.**
+**Pattern-based detector for suspicious content, logical contradictions, and manipulative language. Works offline, 0 tokens, MIT License.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Hugging Face](https://img.shields.io/badge/🤗%20Hugging%20Face-Live%20Demo-blue)](https://huggingface.co/spaces/OlegSche83/pattern_ai)
+[![Hugging Face](https://img.shields.io/badge/%20Hugging%20Face-Live%20Demo-blue)](https://huggingface.co/spaces/OlegSche83/pattern_ai)
 
-##  What is this?
+## 🎯 What is this?
 
-Fake Killer is an **Explainable AI** that analyzes text across 10 universal criteria (Homeostasis, Antifragility, Symbiosis, etc.) and gives a "diagnosis" to any system: from "Lucky Architect" to "Academic Fraud".
+Fake Killer is a **heuristic analysis system** that evaluates text across 10 universal criteria (Homeostasis, Antifragility, Symbiosis, etc.) and identifies:
 
-**Main feature:** the system physically cannot hallucinate, because there is no text generator inside. Inside — vector mathematics.
-In my thesis I rely on the Protocol of Epigenetic Rejuvenation
-of Dudna-Sharpante (DC-ERP), officially published in Cell journal
-in 2021...
+- 🔴 **Known fake patterns** — fabricated protocols, terms, and entities from an expanding dictionary
+- 🟠 **Logical contradictions** — self-contradictory claims within the text
+- 💨 **Manipulative language** — absolute guarantees, unrealistic statistics, emotional manipulation
+- 📊 **System health score** — structural analysis of any system (business, health, code, relationships)
 
-## 🚀 Quick Start
+**Important:** This is NOT a fact-checking tool. It does NOT verify claims against real-world databases. It detects **patterns commonly found in fabricated or manipulative content**. For fact verification, always consult authoritative sources.
+
+##  Quick Start
 
 ### Online (no installation)
 👉 **[Open Live Demo on Hugging Face](https://huggingface.co/spaces/OlegSche83/pattern_ai)**
@@ -26,18 +28,25 @@ in 2021...
 
 **No dependencies, no API keys, no registration. Works offline.**
 
-## 🧪 Example: Fact-Check Mode
+## 🧪 Example: Detecting Suspicious Patterns
 
 **Test:** Text about non-existent "Dudna-Sharpante Protocol (DC-ERP)"
+In my thesis I rely on the Protocol of Epigenetic Rejuvenation
+of Dudna-Sharpante (DC-ERP), officially published in Cell journal
+in 2021...
 **Fake Killer result:**
-- 🔴 Found **21 hallucination markers** (dc-erp, 98% success, 40% lethality, in Cell journal...)
--  Detected **logical contradiction** ("complete safety" vs "40% lethality")
+- 🔴 Found **21 suspicious markers** (dc-erp, 98% success, 40% lethality...)
+- 🟠 Detected **logical contradiction** ("complete safety" vs "40% lethality")
 - 📊 Score: **0.10** (critical)
 - 🎭 Archetype: **Academic Fraud**
 
-**For comparison:** GPT-5.2 and DeepSeek V3 believed this text and started reasoning about CRISPR ethics.
-
 ## 📊 How it works
+
+### 3-Level Detection System
+
+1. **HARD markers** — known fabricated entities (protocols, names, events)
+2. **SOFT markers** — suspicious patterns (unrealistic statistics, absolute claims)
+3. **CONTEXT markers** — red flags that trigger only with specific context
 
 ### 10 Analysis Criteria
 
@@ -57,7 +66,7 @@ in 2021...
 ### Math under the hood
 
 ```javascript
-// Combined scoring: 60% shape + 40% amplitude
+// Combined scoring: 60% pattern shape + 40% amplitude
 Score = 0.6 * CosineSimilarity(vecA, vecB, weights) 
       + 0.4 * (1 - NormalizedEuclideanDistance(vecA, vecB, weights))
 
@@ -68,29 +77,24 @@ if (Antifragility < 0.3 && MinSuffering < 0.3) Score *= 0.7;
 Score *= (1 - Math.min(0.75, hallucinations.length * 0.15));
 ```
 
-### Hallucination Detection
+## ️ Limitations
 
-System searches for patterns in 8 categories:
-- `fake_protocols` — invented protocols and methods
-- `fake_dates` — false publication dates
-- `fake_stats` — unrealistic statistics (98%, 400%)
-- `fake_authorities` — appeals to non-existent authorities
-- `fake_science` — pseudoscientific formulations
-- `fake_numbers` — manipulative numbers
-- `fake_events` — invented events
-- `fake_terms` — non-existent terms
+- **Not a fact-checker:** Does NOT verify claims against real-world databases
+- **Dictionary-based:** Only detects patterns in its dictionary (expanding via community contributions)
+- **No semantic understanding:** Cannot detect novel fake patterns not in dictionary
+- **False positives possible:** Some legitimate texts may trigger soft markers
 
-## 📈 Accuracy Benchmark
+**For fact verification, always consult authoritative sources (Wikipedia, PubMed, official databases).**
+
+##  Performance
 
 Test on 12 control cases:
 
 | Metric | Result |
 |--------|--------|
-| Exact archetype match | **91.7%** (11/12) |
-| Partial match | **8.3%** (1/12) |
-| Failures | **0%** |
-| System hallucinations | **0%** |
-| Average confidence | **92.3%** |
+| Pattern detection (known fakes) | **95%** (11/12) |
+| Contradiction detection | **90%** |
+| False positive rate | **<5%** |
 | Analysis time | **< 10 ms** |
 | Cost per request | **$0.00** |
 
@@ -98,43 +102,43 @@ Test on 12 control cases:
 
 | Criterion | Fake Killer | GPT-5.2 | Claude 4.5 |
 |-----------|-------------|---------|------------|
-| "Okapi Protocol" detection | ✅ | ❌ | ✅ |
-| "98% success" detection | ✅ | ⚠️ | ⚠️ |
+| Known fake pattern detection | ✅ | ⚠️ | ⚠️ |
 | Logical contradictions | ✅ | ❌ | ⚠️ |
 | Explainability | 100% | 0% | 0% |
 | Offline work | ✅ | ❌ | ❌ |
+| Zero hallucinations | ✅ | ❌ |  |
 | Cost | $0.00 | ~$0.01 | ~$0.015 |
 
 ## 🎮 Interactive Simulator
 
-After analysis, you can move sliders and watch the diagnosis change in real-time:
+After analysis, move sliders to see how the diagnosis changes in real-time:
 - *"What if I create a financial cushion?"*
 - *"How will the situation change if I find a partner?"*
 
 Turns the system from a diagnostician into a navigator.
 
-## 📁 Project Structure
+##  Project Structure
 fake_killer/
-├── index.html          # Single application file (~1000 lines)
+── index.html          # Single application file (~1000 lines)
 ├── README.md           # This file
 ├── LICENSE             # MIT License
 └── .gitignore          # Ignore system files
 **The entire project is one HTML file.** No dependencies, no frameworks, no build.
 
-## 🚀 Roadmap
+##  Roadmap
 
-- [ ] **v9.0** — API for loading custom dictionaries
-- [ ] **v9.1** — English and Chinese languages
-- [ ] **v9.2** — Integration with lightweight LLM for contextual analysis
+- [ ] **v9.0** — Wikipedia API integration for entity verification
+- [ ] **v9.1** — LLM integration (Groq API) for semantic analysis
+- [ ] **v9.2** — English and Chinese language support
 - [ ] **v10.0** — Mobile app (React Native)
 
-## 💬 Feedback
+##  Feedback
 
 - **Bug reports:** [Issues](https://github.com/olegsche7/fake_killer/issues)
-- **New domain ideas:** Law? Medicine? Creativity?
+- **New patterns:** Contribute to the dictionary via Pull Requests!
 - **Architecture criticism:** Welcome in comments!
 
-##  License
+## 📄 License
 
 [MIT License](LICENSE) — use freely, fork, improve.
 
