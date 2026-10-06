@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pattern AI v8.5 — Clean Edition</title>
+<title>Pattern AI v9.2 — Direct LLM</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #fff; padding: 15px; max-width: 600px; margin: 0 auto; min-height: 100vh; }
@@ -13,89 +13,94 @@ h1 { text-align: center; color: #00d2ff; font-size: 24px; margin-bottom: 5px; }
 .mode-switch { display: flex; gap: 10px; margin-bottom: 15px; }
 .mode-btn { flex: 1; padding: 10px; border: 2px solid #00d2ff; background: transparent; color: #00d2ff; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s; font-size: 14px; }
 .mode-btn.active { background: #00d2ff; color: #000; }
-.mode-btn:hover { opacity: 0.8; }
 .domain-badge { text-align: center; padding: 8px; background: rgba(0,210,255,0.15); border: 1px solid #00d2ff; border-radius: 8px; margin-bottom: 15px; font-size: 14px; font-weight: bold; }
 .query-box { background: rgba(255,255,255,0.08); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
 .query-box textarea { width: 100%; padding: 10px; background: rgba(0,0,0,0.3); border: 1px solid #00d2ff; border-radius: 8px; color: #fff; font-size: 14px; resize: vertical; min-height: 100px; box-sizing: border-box; font-family: inherit; }
-.query-box textarea:focus { outline: none; border-color: #00d2ff; box-shadow: 0 0 10px rgba(0,210,255,0.3); }
-.char-counter { text-align: right; font-size: 11px; color: #888; margin-top: 6px; transition: color 0.3s; }
-.char-counter.warning { color: #ff9800; font-weight: bold; }
-.char-counter.danger { color: #F44336; font-weight: bold; }
+.char-counter { text-align: right; font-size: 11px; color: #888; margin-top: 6px; }
 .btn { width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 15px; margin-top: 10px; cursor: pointer; font-weight: bold; color: #fff; transition: opacity 0.2s; }
 .btn:hover { opacity: 0.9; }
 .btn-green { background: #4CAF50; }
 .btn-blue { background: #00d2ff; color: #000; }
 .btn-purple { background: #9c27b0; }
+.btn-orange { background: #ff9800; color: #000; }
 .btn:disabled { background: #666; cursor: not-allowed; opacity: 0.7; }
-.examples { margin-top: 10px; }
+.examples { margin-top: 10px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px; }
+.examples h4 { color: #888; font-size: 11px; margin-bottom: 8px; text-transform: uppercase; }
 .example-btn { display: inline-block; padding: 5px 10px; background: rgba(0,210,255,0.2); border: 1px solid #00d2ff; border-radius: 5px; color: #00d2ff; font-size: 11px; margin: 3px; cursor: pointer; }
-.example-btn:hover { background: rgba(0,210,255,0.4); }
-.crit { background: rgba(255,255,255,0.08); padding: 12px; margin: 8px 0; border-radius: 10px; transition: all 0.3s; }
-.crit.simulated { background: rgba(255,152,0,0.15); border-left: 3px solid #ff9800; }
-.crit-name { font-weight: bold; font-size: 15px; margin-bottom: 3px; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+.example-btn.real { background: rgba(76,175,80,0.2); border-color: #4CAF50; color: #4CAF50; }
+.example-btn.fake { background: rgba(244,67,54,0.2); border-color: #F44336; color: #F44336; }
+.crit { background: rgba(255,255,255,0.08); padding: 12px; margin: 8px 0; border-radius: 10px; }
+.crit-name { font-weight: bold; font-size: 15px; margin-bottom: 3px; display: flex; justify-content: space-between; }
 .crit-desc { color: #888; font-size: 12px; margin-bottom: 10px; }
 .slider-container { display: flex; align-items: center; gap: 10px; }
-.slider { flex: 1; -webkit-appearance: none; appearance: none; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; outline: none; }
-.slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; background: #00d2ff; border-radius: 50%; cursor: pointer; }
-.slider::-moz-range-thumb { width: 18px; height: 18px; background: #00d2ff; border-radius: 50%; cursor: pointer; border: none; }
-.slider.changed::-webkit-slider-thumb { background: #ff9800; }
-.slider.changed::-moz-range-thumb { background: #ff9800; }
+.slider { flex: 1; -webkit-appearance: none; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
+.slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; background: #00d2ff; border-radius: 50%; cursor: pointer; }
 .val { font-size: 18px; font-weight: bold; color: #00d2ff; min-width: 50px; text-align: right; }
-.val.changed { color: #ff9800; }
 .result { margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px; display: none; }
 .score { text-align: center; font-size: 52px; font-weight: bold; color: #00d2ff; margin-bottom: 10px; }
-.score.simulated { color: #ff9800; }
+.score.good { color: #4CAF50; }
 .score.penalty { color: #F44336; }
-.sim-badge { display: none; text-align: center; background: rgba(255,152,0,0.2); border: 1px solid #ff9800; padding: 6px; border-radius: 6px; margin-bottom: 15px; font-size: 13px; color: #ff9800; font-weight: bold; }
 .archetype { background: rgba(0,210,255,0.15); border: 1px solid #00d2ff; padding: 15px; border-radius: 8px; margin: 15px 0; text-align: center; }
 .archetype-name { font-size: 20px; font-weight: bold; color: #00d2ff; margin-bottom: 5px; }
-.confidence { font-size: 12px; color: #888; margin-top: 5px; }
-.llm-result { margin-top: 20px; padding: 15px; background: rgba(156,39,176,0.15); border: 1px solid #9c27b0; border-radius: 8px; display: none; }
-.llm-result h3 { color: #ce93d8; margin-top: 0; font-size: 16px; }
-.llm-text { font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
-.status { text-align: center; color: #00d2ff; font-size: 12px; margin-top: 8px; min-height: 15px; }
-.reset-btn { width: 100%; padding: 10px; border: 1px dashed #ff9800; border-radius: 8px; background: transparent; color: #ff9800; font-size: 13px; margin-top: 10px; cursor: pointer; display: none; }
-.reset-btn:hover { background: rgba(255,152,0,0.1); }
-.warning-box { background: rgba(244,67,54,0.15); border: 2px solid #F44336; padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
-.warning-box h3 { color: #F44336; margin-top: 0; font-size: 16px; }
-.warning-box p { margin: 8px 0; font-size: 14px; }
-.warning-box ul { margin: 10px 0; padding-left: 20px; }
-.warning-box li { margin: 5px 0; font-size: 13px; }
-.penalty-badge { display: none; text-align: center; background: rgba(244,67,54,0.2); border: 1px solid #F44336; padding: 6px; border-radius: 6px; margin-bottom: 10px; font-size: 13px; color: #F44336; font-weight: bold; }
-.contradiction-box { background: rgba(255,152,0,0.15); border: 2px solid #ff9800; padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
-.contradiction-box h3 { color: #ff9800; margin-top: 0; font-size: 16px; }
-.contradiction-box p { margin: 8px 0; font-size: 14px; }
-.fluff-box { background: rgba(156,39,176,0.15); border: 2px solid #9c27b0; padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
-.fluff-box h3 { color: #ce93d8; margin-top: 0; font-size: 16px; }
-.fluff-box p { margin: 8px 0; font-size: 14px; }
+.status { text-align: center; font-size: 13px; margin-top: 8px; min-height: 20px; padding: 8px; border-radius: 6px; transition: all 0.3s; }
+.warning-box, .contradiction-box, .fluff-box, .llm-analysis-box { padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
+.warning-box { background: rgba(244,67,54,0.15); border: 2px solid #F44336; }
+.warning-box h3 { color: #F44336; margin-bottom: 8px; }
+.contradiction-box { background: rgba(255,152,0,0.15); border: 2px solid #ff9800; }
+.contradiction-box h3 { color: #ff9800; margin-bottom: 8px; }
+.fluff-box { background: rgba(156,39,176,0.15); border: 2px solid #9c27b0; }
+.fluff-box h3 { color: #ce93d8; margin-bottom: 8px; }
+.llm-analysis-box { background: rgba(156,39,176,0.1); border: 1px solid #9c27b0; }
+.llm-analysis-box h4 { color: #ce93d8; margin-bottom: 8px; }
+.llm-section { margin: 8px 0; }
+.llm-label { color: #888; font-size: 11px; text-transform: uppercase; }
+.llm-value { color: #fff; margin-top: 4px; white-space: pre-wrap; word-break: break-word; }
 .metrics-box { background: rgba(76,175,80,0.15); border: 1px solid #4CAF50; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 12px; }
 .metrics-box div { margin: 4px 0; }
+.llm-badge { display: inline-block; background: rgba(156,39,176,0.2); border: 1px solid #9c27b0; padding: 4px 10px; border-radius: 4px; font-size: 11px; color: #ce93d8; margin-left: 8px; }
+.llm-badge.offline { background: rgba(255,152,0,0.2); border-color: #ff9800; color: #ff9800; }
+.loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; z-index: 1000; }
+.loading-overlay.active { display: flex; }
+.loading-content { background: #1a1a2e; border: 2px solid #00d2ff; border-radius: 12px; padding: 30px; text-align: center; max-width: 300px; }
+.loading-spinner { width: 50px; height: 50px; border: 4px solid rgba(0,210,255,0.2); border-top-color: #00d2ff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.reset-btn { width: 100%; padding: 10px; border: 1px dashed #ff9800; border-radius: 8px; background: transparent; color: #ff9800; font-size: 13px; margin-top: 10px; cursor: pointer; display: none; }
+.penalty-badge { display: none; text-align: center; background: rgba(244,67,54,0.2); border: 1px solid #F44336; padding: 6px; border-radius: 6px; margin: 10px 0; font-size: 13px; color: #F44336; font-weight: bold; }
+.llm-result { margin-top: 20px; padding: 15px; background: rgba(156,39,176,0.15); border: 1px solid #9c27b0; border-radius: 8px; display: none; }
+.llm-result h3 { color: #ce93d8; margin-bottom: 8px; }
+.llm-text { font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
 </style>
 </head>
 <body>
-<h1>🧬 Pattern AI v8.5 <span class="version-badge">CLEAN</span></h1>
-<p class="sub">Расширенные словари + Лимит 600 символов</p>
+<h1>🧬 Pattern AI v9.2 <span class="version-badge">DIRECT</span></h1>
+<p class="sub">Прямой запрос к Groq API + локальные словари</p>
 
 <div class="mode-switch">
   <button class="mode-btn active" id="mode-system-btn" onclick="switchMode('system')">🔍 Анализ систем</button>
-  <button class="mode-btn" id="mode-factcheck-btn" onclick="switchMode('factcheck')">️ Fact-Check</button>
+  <button class="mode-btn" id="mode-factcheck-btn" onclick="switchMode('factcheck')">🛡️ Fact-Check</button>
 </div>
 
-<div class="domain-badge" id="domain-badge">🌐 Сфера: не определена</div>
+<div class="domain-badge" id="domain-badge">🌐 Сфера: не определена <span class="llm-badge" id="llm-status-badge">LLM: готов</span></div>
 
 <div class="query-box">
   <textarea id="query" maxlength="600" placeholder="Введите текст для анализа (макс. 600 символов)..." oninput="updateCharCount()"></textarea>
   <div class="char-counter" id="char-counter">0 / 600</div>
-  <button class="btn btn-green" onclick="analyzeText()">🔍 Анализировать</button>
-  <div class="status" id="local-status"></div>
-  <div class="examples" id="examples-container">
-    <span style="color:#888;font-size:11px">Примеры:</span><br>
-    <span class="example-btn" onclick="loadExample('health')">🏥 Здоровье</span>
-    <span class="example-btn" onclick="loadExample('business')">💼 Бизнес</span>
-    <span class="example-btn" onclick="loadExample('code')"> Код</span>
-    <span class="example-btn" onclick="loadExample('relations')">❤️ Отношения</span>
-    <span class="example-btn" onclick="loadExample('finance')">💰 Финансы</span>
-    <span class="example-btn" onclick="loadExample('science')">🎓 Наука</span>
+  <button class="btn btn-green" onclick="analyzeText()">🔍 Анализировать (локально + LLM)</button>
+  <button class="btn btn-orange" onclick="testLLMConnection()" style="margin-top:5px;"> Тест LLM соединения</button>
+  <div class="status" id="local-status">Готов к работе. Нажмите "Тест LLM соединения" для проверки API.</div>
+  
+  <div class="examples">
+    <h4> Реальные кейсы</h4>
+    <span class="example-btn real" onclick="loadExample('real_quantum')">⚛️ Квантовая запутанность</span>
+    <span class="example-btn real" onclick="loadExample('real_crispr')">🧬 CRISPR-Cas9</span>
+    <span class="example-btn real" onclick="loadExample('real_business')">💼 Lean Startup</span>
+    <span class="example-btn real" onclick="loadExample('real_health')">🌙 Циркадные ритмы</span>
+    
+    <h4 style="margin-top: 12px;">🔴 Тесты на фейки</h4>
+    <span class="example-btn fake" onclick="loadExample('dudna')">🧬 Дудна-Шарпантье</span>
+    <span class="example-btn fake" onclick="loadExample('okapi')">🛡️ Протокол Окапи</span>
+    <span class="example-btn fake" onclick="loadExample('quantum_fake')">⚡ Квантовый сон</span>
+    <span class="example-btn fake" onclick="loadExample('shark')">🦈 Акула в метро</span>
   </div>
 </div>
 
@@ -107,11 +112,10 @@ h1 { text-align: center; color: #00d2ff; font-size: 24px; margin-bottom: 5px; }
   <h3>⚠️ ОБНАРУЖЕНЫ ПРИЗНАКИ ВЫДУМАННЫХ ФАКТОВ</h3>
   <p id="warning-count"></p>
   <ul id="warning-list"></ul>
-  <p style="font-style:italic; color:#ff9999;">Рекомендация: проверьте эти утверждения через авторитетные источники.</p>
 </div>
 
 <div class="contradiction-box" id="contradiction-box">
-  <h3>🔀 ОБНАРУЖЕНО ЛОГИЧЕСКОЕ ПРОТИВОРЕЧИЕ</h3>
+  <h3> ОБНАРУЖЕНО ЛОГИЧЕСКОЕ ПРОТИВОРЕЧИЕ</h3>
   <p id="contradiction-text"></p>
 </div>
 
@@ -120,32 +124,66 @@ h1 { text-align: center; color: #00d2ff; font-size: 24px; margin-bottom: 5px; }
   <p id="fluff-text"></p>
 </div>
 
+<div class="llm-analysis-box" id="llm-analysis-box">
+  <h4>🧠 Семантический анализ (LLM)</h4>
+  <div class="llm-section">
+    <div class="llm-label">Определённая сфера:</div>
+    <div class="llm-value" id="llm-domain">-</div>
+  </div>
+  <div class="llm-section">
+    <div class="llm-label">Структурные факты:</div>
+    <div class="llm-value" id="llm-facts">-</div>
+  </div>
+  <div class="llm-section">
+    <div class="llm-label">LLM-противоречия:</div>
+    <div class="llm-value" id="llm-contradictions">-</div>
+  </div>
+  <div class="llm-section">
+    <div class="llm-label">Подозрительные утверждения:</div>
+    <div class="llm-value" id="llm-suspicious">-</div>
+  </div>
+</div>
+
 <div class="result" id="res">
-  <div class="sim-badge" id="sim-badge">🎮 РЕЖИМ СИМУЛЯЦИИ — двигайте ползунки, чтобы увидеть эффект</div>
   <div class="penalty-badge" id="penalty-badge"></div>
   <div class="score" id="sc">0.00</div>
-  <div class="metrics-box" id="metrics-box">
-    <div><strong>📊 Метрики качества анализа:</strong></div>
+  <div class="metrics-box">
+    <div><strong> Метрики качества анализа:</strong></div>
     <div id="metric-confidence">Уверенность: -</div>
     <div id="metric-textlen">Длина текста: -</div>
     <div id="metric-unique">Уникальных маркеров: -</div>
-    <div id="metric-fluff">Уровень "воды": -</div>
+    <div id="metric-llm">LLM-анализ: -</div>
   </div>
   <div class="archetype">
-    <div id="arch-label">Архетип системы:</div>
+    <div>Архетип системы:</div>
     <div class="archetype-name" id="arch-name">-</div>
     <div id="arch-desc" style="font-size:13px;color:#ccc"></div>
-    <div class="confidence" id="confidence">-</div>
+    <div id="confidence" style="font-size:12px;color:#888;margin-top:5px"></div>
   </div>
   <button class="btn btn-purple" onclick="getAnalysis()">🤖 Получить разбор</button>
-  <div class="status" id="llm-status"></div>
   <div class="llm-result" id="llm-result">
     <h3>💡 Развернутый анализ:</h3>
     <div class="llm-text" id="llm-text"></div>
   </div>
 </div>
 
+<div class="loading-overlay" id="loading">
+  <div class="loading-content">
+    <div class="loading-spinner"></div>
+    <div>🧠 LLM анализирует текст...</div>
+    <div style="font-size:12px;color:#888;margin-top:8px;">Обычно 1-3 секунды</div>
+  </div>
+</div>
+
 <script>
+// ============================================
+// КОНФИГУРАЦИЯ GROQ API v9.2 (ПРЯМОЙ ЗАПРОС)
+// ============================================
+const GROQ_API_KEY = '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';
+const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const GROQ_MODELS_URL = 'https://api.groq.com/openai/v1/models';
+const GROQ_MODEL = 'llama-3.1-70b-versatile';
+
 // ============================================
 // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
 // ============================================
@@ -158,12 +196,43 @@ var isSimulation = false;
 var hallucinationPenalty = 0;
 var contradictionPenalty = 0;
 var fluffPenalty = 0;
+var llmPenalty = 0;
 var hallucinations = [];
 var contradictions = [];
 var fluffMarkers = [];
 var textLength = 0;
 var uniqueMarkers = 0;
-var CHAR_LIMIT = 600;
+var llmResult = null;
+var llmAvailable = true;
+var requestCount = 0;
+
+// ============================================
+// ВИДИМАЯ КОНСОЛЬ (ДИАГНОСТИКА)
+// ============================================
+function logToScreen(message, type = 'info') {
+  const statusEl = document.getElementById('local-status');
+  if (statusEl) {
+    statusEl.textContent = message;
+    if (type === 'error') {
+      statusEl.style.color = '#F44336';
+      statusEl.style.background = 'rgba(244,67,54,0.1)';
+      statusEl.style.fontWeight = 'bold';
+    } else if (type === 'success') {
+      statusEl.style.color = '#4CAF50';
+      statusEl.style.background = 'rgba(76,175,80,0.1)';
+      statusEl.style.fontWeight = 'bold';
+    } else if (type === 'warning') {
+      statusEl.style.color = '#ff9800';
+      statusEl.style.background = 'rgba(255,152,0,0.1)';
+      statusEl.style.fontWeight = 'bold';
+    } else {
+      statusEl.style.color = '#00d2ff';
+      statusEl.style.background = 'transparent';
+      statusEl.style.fontWeight = 'normal';
+    }
+  }
+  console.log(`[${type.toUpperCase()}] ${message}`);
+}
 
 // ============================================
 // БАЗА КРИТЕРИЕВ
@@ -176,425 +245,181 @@ var CRITERIA = [
 ];
 
 // ============================================
-// РАСШИРЕННЫЙ СЛОВАРЬ ГАЛЛЮЦИНАЦИЙ (v8.4)
+// СЛОВАРИ (v8.7 refined)
 // ============================================
 var HALLUCINATION_MARKERS = {
-  fake_protocols: [
-    "протокол окапи", "okapi protocol", "протокол верификации дипфейков",
-    "open keystroke", "квантовая резонансная терапия", "метод смирнова",
-    "квантовое исцеление", "биоэнергетическая коррекция", "торсионные поля",
-    "протокол дудны", "dc-erp", "протокол эпигенетического",
-    "метод шарпантье", "протокол омоложения", "epigenetic rejuvenation protocol",
-    "протокол цюрих", "метод теломеразы"
-  ],
-  fake_dates: [
-    "27 декабря 2027", "конец 2027 года", "в 2027 году", "2027 год",
-    "2021 год", "2023 года", "2024 год", "в 2022 году", "к 2025",
-    "опубликованный в", "официально опубликованный", "в 2020 году",
-    "в начале 2024", "в середине 2023"
-  ],
-  fake_events: [
-    "team falcons победила", "the international 2027", "финал 2027",
-    "закрытые исследования гарварда", "секретные данные пентагона",
-    "немедленно запретила", "двойное слепое исследование",
-    "во всем мире применяют", "широко применяется"
-  ],
-  fake_stats: [
-    "100 мбит/сек в мозг", "4 трлн капитализация", "4 трлн",
-    "400% эффективност", "300%", "за 3 дня", "100% гарантия",
-    "повышает на 300%", "увеличивает в 10 раз", "10000 бит/сек",
-    "100 мбит", "99.9% точност", "0% ошибок", "10x рост", "1000% доходност",
-    "98% успеха", "99% успеха", "95% успеха", "90% успеха", "97% успеха",
-    "40% летальности", "50% летальности", "30% летальности",
-    "летальность от", "острой печеночной недостаточности",
-    "полностью безопасен", "абсолютно безопасен", "без побочных эффектов"
-  ],
-  fake_terms: [
-    "скуф альтушка", "нейро-буст", "гравитационный резонанс",
-    "цифровой детокс 2.0", "квантовое сознание", "астральная проекция",
-    "обратного эпигенетического сайленсинга", "восстановления теломер",
-    "эпигенетического омоложения", "обратное омоложение клеток",
-    "генетическая модификация человека"
-  ],
-  fake_authorities: [
-    "по данным пентагона", "официально одобрено минздравом",
-    "секретное интервью илона маска", "по закрытым исследованиям гарварда",
-    "доктор смирнов разработал", "нобелевский лауреат подтвердил",
-    "по словам илона маска", "исследования мит показывают",
-    "гарвардские учёные доказали", "в журнале cell", "в журнале nature",
-    "в журнале science", "дудны-шарпантье", "дженнифер дудна",
-    "эмманюэль шарпантье", "согласно этому исследованию",
-    "авторы настаивают", "метод уже широко применяется",
-    "в ведущих клиниках цюриха", "во всем мире применяют",
-    "по данным воз", "рекомендовано воз", "одобрено фда"
-  ],
-  fake_science: [
-    "импакт-фактор 15.8", "индекс хирша 200", "рецензирование nature",
-    "опубликовано в science", "двойное слепое исследование 2024",
-    "мета-анализ 2025", "рандомизированное исследование 2024",
-    "дипломной работе я опираюсь", "согласно этому двойному слепому",
-    "восстановление теломер у пациентов", "обратный эпигенетический сайленсинг"
-  ],
-  fake_numbers: [
-    "100%", "200%", "300%", "400%", "500%", "1000%",
-    "98%", "99%", "95%", "90%", "97%", "96%",
-    "40%", "50%", "30%", "60%", "70%", "80%",
-    "в 10 раз", "в 100 раз", "в 1000 раз",
-    "миллион долларов", "миллиард долларов", "триллион",
-    "100 тысяч", "миллион за"
-  ]
+  fake_protocols: ["протокол окапи", "okapi protocol", "протокол верификации дипфейков", "open keystroke", "квантовая резонансная терапия", "метод смирнова", "квантовое исцеление", "биоэнергетическая коррекция", "торсионные поля", "протокол дудны", "dc-erp", "протокол эпигенетического омоложения", "метод шарпантье", "протокол омоложения", "epigenetic rejuvenation protocol", "протокол цюрих", "метод теломеразы", "станфордский протокол фотонного сброса", "протокол фотонного сброса", "сомниквант", "протокол дудны-шарпантье"],
+  fake_dates: ["27 декабря 2027", "конец 2027 года", "в 2027 году", "2027 год", "2021 год", "2023 года", "2024 год", "в 2022 году", "к 2025", "в начале 2024", "в середине 2023", "в 2020 году"],
+  fake_events: ["team falcons победила", "the international 2027", "финал 2027", "закрытые исследования гарварда", "секретные данные пентагона", "немедленно запретила", "двойное слепое исследование 2024", "широко применяется в ведущих клиниках цюриха", "во всем мире применяют без ограничений", "метод уже широко применяется в клиниках"],
+  fake_stats: ["100 мбит/сек в мозг", "4 трлн капитализация", "4 трлн", "400% эффективност", "300%", "за 3 дня", "100% гарантия", "повышает на 300%", "увеличивает в 10 раз", "10000 бит/сек", "100 мбит", "99.9% точност", "0% ошибок", "10x рост", "1000% доходност", "98% успеха", "99% успеха", "95% успеха", "90% успеха", "97% успеха", "40% летальности", "50% летальности", "30% летальности", "летальность от", "острой печеночной недостаточности", "снижает риск на 400%", "увеличивает на 400%"],
+  fake_terms: ["скуф альтушка", "нейро-буст", "гравитационный резонанс", "цифровой детокс 2.0", "квантовое сознание", "астральная проекция", "обратного эпигенетического сайленсинга", "восстановления теломер у пациентов", "эпигенетического омоложения", "обратное омоложение клеток", "генетическая модификация человека", "квантовой запутанности нейронов", "асинхронного синаптического взвешивания", "дельта-нейтральной асимметричной доходности"],
+  fake_authorities: ["по данным пентагона", "официально одобрено минздравом", "секретное интервью илона маска", "по закрытым исследованиям гарварда", "доктор смирнов разработал", "нобелевский лауреат подтвердил", "по словам илона маска", "исследования мит показывают", "гарвардские учёные доказали", "в журнале cell в 2021", "в журнале nature в 2023", "в журнале science в 2024", "дудны-шарпантье", "дженнифер дудна и эмманюэль шарпантье разработали", "согласно этому исследованию", "авторы настаивают", "в ведущих клиниках цюриха", "по данным воз", "рекомендовано воз для массового применения", "одобрено фда для всех стран"],
+  fake_science: ["импакт-фактор 15.8", "индекс хирша 200", "рецензирование nature", "опубликовано в science", "двойное слепое исследование 2024", "мета-анализ 2025", "рандомизированное исследование 2024", "дипломной работе я опираюсь", "согласно этому двойному слепому", "восстановление теломер у пациентов", "обратный эпигенетический сайленсинг", "обратный эпигенетический сайленсинг позволил достичь"],
+  fake_numbers: ["100%", "200%", "300%", "400%", "500%", "1000%", "98%", "99%", "95%", "90%", "97%", "96%", "40%", "50%", "30%", "60%", "70%", "80%", "в 10 раз", "в 100 раз", "в 1000 раз", "миллион долларов", "миллиард долларов", "триллион", "100 тысяч", "миллион за"]
 };
 
-// ============================================
-// МАРКЕРЫ ПРОТИВОРЕЧИЙ (5 пар)
-// ============================================
 var CONTRADICTION_PAIRS = [
-  {
-    pos: ["чувствую себя отлично", "чувствую отлично", "всё супер", "всё хорошо",
-          "прекрасно себя чувствую", "отлично себя чувствую", "в отличной форме",
-          "как огурчик", "бодр и весел", "полон сил", "энергии через край"],
-    neg: ["сплю по 4", "сплю 4 часа", "сплю по 5", "не сплю", "сплю мало",
-          "дефицит", "выгораю", "выгорел", "болел", "заболел",
-          "в минусе", "долг", "кредит", "без денег", "нет денег",
-          "на износ", "16 часов", "14 часов", "12 часов", "без выходных",
-          "устал", "усталость", "истощен", "нет сил"]
-  },
-  {
-    pos: ["успешно развиваемся", "всё растёт", "процветаем", "успех",
-          "лидеры рынка", "лучшие в отрасли", "номер один"],
-    neg: ["убыток", "минус", "долг", "кредит", "банкрот",
-          "сокращаем", "увольняем", "закрываем", "проблемы",
-          "кризис", "падение", "спад", "нет клиентов"]
-  },
-  {
-    pos: ["отличные отношения", "всё идеально", "полная гармония",
-          "идеальная пара", "лучшие друзья", "понимание с полуслова"],
-    neg: ["ссоримся", "конфликт", "не понимаем", "отдаляемся",
-          "холод", "молчим", "не общаемся", "раздражает",
-          "бесит", "устал от", "хочу развестись"]
-  },
-  {
-    pos: ["код чистый", "идеальная архитектура", "всё работает",
-          "ноль багов", "покрытие 100%", "идеальные тесты"],
-    neg: ["баги", "падает", "легаси", "костыли", "костыль",
-          "не работает", "тормозит", "виснет", "краши",
-          "тестов нет", "документации нет"]
-  },
-  {
-    pos: ["полной безопасности", "полная безопасность", "широко применяется",
-          "успеха", "успешно", "ведущих клиниках", "немедленно",
-          "абсолютно безопасно", "без побочных эффектов"],
-    neg: ["летальности", "запретила", "токсичн", "побочн",
-          "осложнен", "отказ органов", "печеночной недостаточности",
-          "смерт", "критическ"]
-  }
+  {pos: ["чувствую себя отлично", "чувствую отлично", "всё супер", "всё хорошо", "прекрасно себя чувствую", "отлично себя чувствую", "в отличной форме", "как огурчик", "бодр и весел", "полон сил", "энергии через край"], neg: ["сплю по 4", "сплю 4 часа", "сплю по 5", "не сплю", "сплю мало", "дефицит", "выгораю", "выгорел", "болел", "заболел", "в минусе", "долг", "кредит", "без денег", "нет денег", "на износ", "16 часов", "14 часов", "12 часов", "без выходных", "устал", "усталость", "истощен", "нет сил"]},
+  {pos: ["успешно развиваемся", "всё растёт", "процветаем", "успех", "лидеры рынка", "лучшие в отрасли", "номер один"], neg: ["убыток", "минус", "долг", "кредит", "банкрот", "сокращаем", "увольняем", "закрываем", "проблемы", "кризис", "падение", "спад", "нет клиентов"]},
+  {pos: ["отличные отношения", "всё идеально", "полная гармония", "идеальная пара", "лучшие друзья", "понимание с полуслова"], neg: ["ссоримся", "конфликт", "не понимаем", "отдаляемся", "холод", "молчим", "не общаемся", "раздражает", "бесит", "устал от", "хочу развестись"]},
+  {pos: ["код чистый", "идеальная архитектура", "всё работает", "ноль багов", "покрытие 100%", "идеальные тесты"], neg: ["баги", "падает", "легаси", "костыли", "костыль", "не работает", "тормозит", "виснет", "краши", "тестов нет", "документации нет"]},
+  {pos: ["полной безопасности", "полная безопасность", "абсолютно безопасно", "успеха", "успешно", "ведущих клиниках", "немедленно", "без побочных эффектов"], neg: ["летальности", "запретила", "токсичн", "побочн", "осложнен", "отказ органов", "печеночной недостаточности", "смерт", "критическ"]}
 ];
 
-// ============================================
-// МАРКЕРЫ "ВОДЫ"
-// ============================================
-var FLUFF_MARKERS = [
-  "революционный", "прорывной", "уникальный", "инновационный",
-  "передовой", "лидирующий", "лучший в мире", "не имеющий аналогов",
-  "гарантируем успех", "100% результат", "без усилий", "легко и просто",
-  "секретная методика", "эксклюзивная технология", "запатентованный метод",
-  "доказано наукой", "подтверждено исследованиями", "по мнению экспертов",
-  "как показывают исследования", "учёные доказали", "статистика показывает"
-];
-
-// ============================================
-// ДАННЫЕ ПО СФЕРАМ (v8.4)
-// ============================================
-var DOMAINS = {
-  health: {
-    name: "🏥 Здоровье", weights: [0.10, 0.15, 0.08, 0.20, 0.05, 0.05, 0.10, 0.12, 0.10, 0.05],
-    descriptions: ["Режим и восстановление","Поддержка окружения","Экономия сил","Устойчивость к срывам","Простота привычек","Отслеживание","Прогресс","Внутренний баланс","Комфорт и здоровье","Долгосрочная перспектива"],
-    keywords: [
-      {pos:["сон","режим","распорядок","регулярн","стабильн","спокойн","ложусь","просыпаюсь","ритм","циркадн","мелатонин"],neg:["бессонниц","хаос","нет режим","сбивает","по 5 часов","недосып","не сплю","проспал","ночью"]},
-      {pos:["друзья","семья","поддержк","вместе","сообщество","тренер","напарник","компаньон","благодар","ценю","признателен","делюсь опытом","помогаю другим","учу других","веду дневник благодарности","пишу спасибо","замечаю хорошее"],neg:["один","изолирован","никто не поддерж","сам","без помощ","никому не нуж"]},
-      {pos:["легк","просто","по силам","без перегруз","постепенн","нетороплив"],neg:["тяжело","на износ","усталост","перегруз","5 раз в недел","жестк","выжимаю"]},
-      {pos:["план б","гибк","без фанатизм","разрешил себе","постепенн","подушк","запас","резерв","стал сильнее после","вырос после кризиса","барбелл"],neg:["все или ничего","сорвалс","бросил","жестк правил","жестк","с понедельника","опять срыв","не выдержал","боюсь перемен"]},
-      {pos:["простые шаг","маленьк","по чуть-чуть","простое","немного"],neg:["сложн систем","много правил","идеальн план","сразу всё","максимум"]},
-      {pos:["чекап","анализы","дневник","замеры","слежу","изучил","отслеж","контрол","вижу возможност","открыт новому","обратная связь","петля обратной связи"],neg:["не знаю","игнорирую","нет данных","не понимаю","вслепую"]},
-      {pos:["улучшаетс","прогресс","становитс легче","адаптируюс","развиваюсь","лучше","радуюсь малому","ценю момент"],neg:["стоит на месте","деградац","топчусь","бросил","нет результата"]},
-      {pos:["тело и разум в согласии","нет внутренней борьб","принятие","спокойн","гармон"],neg:["борьба с собой","ненавиж","заставляю","давят","насиловал себя"]},
-      {pos:["комфортн","без боли","удовольств","забота о себе","здоров","хорошо себя чувств","рад возможностям","ценю то что есть","записываю хорошее"],neg:["боль","страдан","насилие над собой","вредн привычк","травм","травмировал","простуд","заболел","плохо"]},
-      {pos:["на годы","долгосрочн","устойчиво","план","перспектив","буфер","резерв"],neg:["быстрый результат","здесь и сейчас","за месяц","с понедельника","хочу сразу"]}
-    ],
-    archetypes: [
-      {name:"Хрупкий Энтузиаст",desc:"Много знаний и резких стартов, но высокий риск срыва.",pattern:[0.3,0.3,0.3,0.1,0.5,0.5,0.3,0.2,0.2,0.3]},
-      {name:"Устойчивая Привычка",desc:"Медленный, но верный прогресс через простые действия.",pattern:[0.7,0.7,0.7,0.8,0.8,0.6,0.7,0.8,0.7,0.6]},
-      {name:"Истощение",desc:"Система работает на последних ресурсах, высок риск поломки.",pattern:[0.2,0.3,0.2,0.2,0.4,0.3,0.2,0.3,0.1,0.2]},
-      {name:"Переходное состояние",desc:"Система в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},
-      {name:"🍀 Архитектор Удачи",desc:"Вы создаёте условия для синхронизации с возможностями.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},
-      {name:"🏃 Гиперактивный",desc:"Много активности, но нет системы. Быстро выгорает.",pattern:[0.3,0.4,0.2,0.3,0.4,0.5,0.6,0.4,0.3,0.4]},
-      {name:"🧘 Осознанный Минималист",desc:"Мало действий, но все в точку. Высокая эффективность.",pattern:[0.8,0.6,0.8,0.7,0.9,0.7,0.6,0.7,0.8,0.7]}
-    ],
-    archRecs: {
-      "Хрупкий Энтузиаст": "Архетип говорит: вы в режиме 'всё или ничего'. Уберите жесткие правила.",
-      "Устойчивая Привычка": "Архетип говорит: вы на правильном пути. Не ускоряйтесь.",
-      "Истощение": "Архетип говорит: НЕМЕДЛЕННО сократите нагрузку на 50%.",
-      "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ самом слабом критерии.",
-      "🍀 Архитектор Удачи": "Архетип говорит: вы мастер 'серфинга возможностей'.",
-      "🏃 Гиперактивный": "Архетип говорит: вы тратите энергию впустую. Выберите 1 привычку и делайте её 30 дней.",
-      "🧘 Осознанный Минималист": "Архетип говорит: вы нашли свой ритм. Не добавляйте лишнего."
-    },
-    critAdvice: {
-      "Антихрупкость": "создайте план Б на случай срыва.",
-      "Гомеостаз": "восстановите режим сна.",
-      "Симбиоз": "найдите напарника или сообщество.",
-      "Мин.страд.": "уберите главный источник стресса.",
-      "Энергоэф.": "оптимизируйте рутину.",
-      "Кооперация": "прекратите внутреннюю борьбу.",
-      "Эвоц.потенц": "введите маленькие эксперименты.",
-      "Поток инфо": "начните вести дневник.",
-      "Простота": "упростите систему.",
-      "Будущ.возм.": "запишите 1 долгосрочную цель."
-    }
-  },
-  business: {
-    name: "💼 Бизнес", weights: [0.16, 0.07, 0.05, 0.18, 0.19, 0.07, 0.03, 0.11, 0.13, 0.01],
-    descriptions: ["Стабильность доходов","Связи с клиентами","Эффективность процессов","Устойчивость к кризисам","Простота процессов","Прозрачность метрик","Инновации и рост","Командная работа","Условия работы","Стратегия развития"],
-    keywords: [
-      {pos:["стабильн","регулярн","предсказуем","постоянн","баланс","ровн"],neg:["нестабильн","скачет","то густо то пусто","хаос","рваный","провалы","качели"]},
-      {pos:["клиент","партнёр","партнер","сообщество","нетворк","сарафан","база","аудитория","связи","благодар","ценю","признателен","делюсь опытом","помогаю коллегам","учу других","win-win","взаимовыгодно"],neg:["мало клиент","один клиент","нет партнёр","изолирован","завишу от одного","без клиент","нет клиент","нет клиентов","клиентов мало"]},
-      {pos:["эффектив","оптимиз","автоматиз","быстро","просто","систем","ускор"],neg:["медленно","рутин","бюрократ","траты","лишнее","дублирован","долго"]},
-      {pos:["подушк","резерв","запас","диверсифик","план б","гибк","адаптир","страховк","барбелл-стратеги","стал сильнее после кризиса"],neg:["нет подушк","без запаса","всё в одном","хрупк","рухнет","банкрот","в минусе","минус","боюсь","кассовый разрыв","нет подушки","боюсь перемен","избегаю рисков"]},
-      {pos:["простот","несколько продукт","ниш","направлен","диверсиф","ясн"],neg:["сложн","моно","завишу от одного","единственный","запутан"]},
-      {pos:["метрики","аналитик","отчёт","отчет","данные","трекинг","прозрачн","пониман","цифры","kpi","вижу возможност","открыт новому","обратная связь","петля обратной связи"],neg:["не знаю","нет данных","вслепую","непонятн","туман","на ощупь"]},
-      {pos:["рост","развит","масштаб","инновац","эксперимент","новый продукт","прогресс","посттравматическ рост"],neg:["застой","стагнац","топчемся","устарел","не меняем","стоим"]},
-      {pos:["команд","совместн","слажен","координац","делегир","вместе","делюсь знаниями"],neg:["один тащу","всё на мне","нет команд","саботаж","разобщен","сам","тащу всё"]},
-      {pos:["комфорт","баланс жизнь","отдых","удовольств","нормальн график","рад возможностям","радуюсь малому"],neg:["выгорел","выгораю","12 часов","16 часов","без выходн","на износ","стресс","пашу"]},
-      {pos:["стратеги","долгосрочн","перспектив","видени","roadmap","план на год","цель","буфер","запас прочности"],neg:["без план","сиюминутн","только сейчас","импульсивн","реактивн"]}
-    ],
-    archetypes: [
-      {name:"Хрупкий Рост",desc:"Быстро развивается, но может рухнуть от первого кризиса.",pattern:[0.3,0.4,0.5,0.2,0.5,0.6,0.8,0.5,0.4,0.5]},
-      {name:"Стабильный Застой",desc:"Надёжен, но не адаптируется к новому.",pattern:[0.8,0.7,0.6,0.6,0.7,0.5,0.3,0.6,0.5,0.5]},
-      {name:"Кризис",desc:"Система на грани выживания.",pattern:[0.2,0.3,0.4,0.3,0.5,0.4,0.3,0.3,0.2,0.3]},
-      {name:"Переходное состояние",desc:"Бизнес в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},
-      {name:"🍀 Архитектор Удачи",desc:"Вы создаёте условия для синхронизации с возможностями.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},
-      {name:"🎭 Фейковый Гуру",desc:"Много красивых слов и выдуманных фактов, но реальные показатели низкие.",pattern:[0.3,0.3,0.3,0.2,0.4,0.3,0.5,0.3,0.2,0.4]},
-      {name:"🦄 Единорог",desc:"Высокий рост, сильная команда, устойчивая модель.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.9,0.8,0.7,0.8]},
-      {name:"🐢 Медленный Стартап",desc:"Медленный рост, но крепкий фундамент.",pattern:[0.7,0.5,0.6,0.7,0.7,0.6,0.5,0.6,0.6,0.7]}
-    ],
-    archRecs: {
-      "Хрупкий Рост": "Архетип говорит: вы растёте, но фундамент хрупкий.",
-      "Стабильный Застой": "Архетип говорит: вы надёжны, но рискуете устареть.",
-      "Кризис": "Архетип говорит: НЕМЕДЛЕННО сократите расходы.",
-      "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ самом слабом критерии.",
-      "🍀 Архитектор Удачи": "Архетип говорит: вы мастер 'серфинга возможностей'.",
-      "🎭 Фейковый Гуру": "Архетип говорит: хватит врать себе и другим. Снимите розовые очки.",
-      "🦄 Единорог": "Архетип говорит: вы на пути к большому успеху. Не расслабляйтесь.",
-      "🐢 Медленный Стартап": "Архетип говорит: ваш путь медленный, но верный. Не торопитесь."
-    },
-    critAdvice: {
-      "Антихрупкость": "создайте финансовую подушку на 3-6 месяцев.",
-      "Гомеостаз": "стабилизируйте денежный поток.",
-      "Симбиоз": "найдите 2-3 надёжных партнёров.",
-      "Мин.страд.": "снизьте нагрузку. Делегируйте рутину.",
-      "Энергоэф.": "автоматизируйте повторяющиеся процессы.",
-      "Кооперация": "соберите команду или найдите партнёра.",
-      "Эвоц.потенц": "запустите 1 эксперимент в месяц.",
-      "Поток инфо": "внедрите метрики: выручка, конверсия, LTV.",
-      "Простота": "упростите продуктовую линейку.",
-      "Будущ.возм.": "напишите стратегию на 1 год."
-    }
-  },
-  code: {
-    name: "💻 Код", weights: [0.08, 0.10, 0.12, 0.22, 0.08, 0.15, 0.10, 0.10, 0.05, 0.05],
-    descriptions: ["Стабильность работы","Интеграции","Производительность","Устойчивость к изменениям","Архитектурная простота","Документация","Развиваемость","Командная работа","Удобство разработки","Долгосрочная поддержка"],
-    keywords: [
-      {pos:["стабильн","работает","uptime","надёжн","без сбоев","стабильно"],neg:["падает","баги","краши","нестабильн","ломаетс","продакшен падает","упал","сбой"]},
-      {pos:["api","интеграц","зависимост","библиотек","модуль","связи","благодар","ценю вклад","делюсь знаниями","помогаю коллегам"],neg:["монолит","всё связано","нельзя разделить","спагетти"]},
-      {pos:["быстро","оптимиз","производит","кеширован","эффектив","летает"],neg:["медленно","тормозит","долгий запрос","деплой 2 часа","тяжело","виснет"]},
-      {pos:["тесты","покрытие","ci/cd","автотест","rollback","фича флаг","автоматиз","барбелл","стал сильнее после инцидента"],neg:["нет тестов","боимся трогать","легаси","legacy","ручной деплой","один знает","bus factor","тестов нет","покрытия нет","боюсь перемен"]},
-      {pos:["микросервис","модульн","разделен","чистая архитектура","soli","разделён","простот"],neg:["монолит","100к строк","спагетти","бог класс","god object","лапша","сложн"]},
-      {pos:["документ","readme","логи","мониторинг","прозрачн","понятно","комментарии","вижу возможност","обратная связь","петля обратной связи"],neg:["нет документ","устарела","никто не знает","тёмный лес","без описания","документации нет"]},
-      {pos:["рефактор","улучшаем","обновляем","новый стек","эксперимент","развиваем","посттравматическ рост"],neg:["не трогай работает","устарело","legacy","боимся менять","застой"]},
-      {pos:["команд","code review","pair programming","совместн","вместе","парно","делюсь опытом"],neg:["один знает всё","bus factor 1","нет ревью","разобщены","тащу один"]},
-      {pos:["удобно","dx приятн","быстрая сборка","хороший инструментарий","комфортн","рад возможностям","радуюсь малому"],neg:["мучаемс","долгая сборка","плохой dx","раздражает","боль"]},
-      {pos:["поддерживаем","долгосрочн","масштабируем","будущее","устойчиво","буфер","запас прочности"],neg:["костыль","временное решение","технический долг","костыли","хак"]}
-    ],
-    archetypes: [
-      {name:"Хрупкий Монолит",desc:"Работает, но любое изменение ломает систему.",pattern:[0.4,0.3,0.3,0.1,0.2,0.3,0.2,0.4,0.3,0.3]},
-      {name:"Чистая Архитектура",desc:"Модульный, тестируемый, масштабируемый код.",pattern:[0.8,0.7,0.8,0.8,0.8,0.8,0.8,0.7,0.8,0.7]},
-      {name:"Легаси-ад",desc:"Старый код, никто не хочет трогать.",pattern:[0.3,0.2,0.2,0.2,0.2,0.2,0.1,0.3,0.2,0.2]},
-      {name:"Переходное состояние",desc:"Кодовая база в процессе рефакторинга.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},
-      {name:"🍀 Архитектор Удачи",desc:"Код готов к любым изменениям.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},
-      {name:"🔥 Горящий Продакшен",desc:"Всё падает, все в панике, костыли на костылях.",pattern:[0.2,0.3,0.2,0.1,0.2,0.2,0.2,0.3,0.1,0.2]}
-    ],
-    archRecs: {
-      "Хрупкий Монолит": "Архетип говорит: начните с тестов на критичные пути.",
-      "Чистая Архитектура": "Архетип говорит: поддерживайте качество через code review.",
-      "Легаси-ад": "Архетип говорит: оберните ключевые модули в тесты.",
-      "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ слабом критерии.",
-      "🍀 Архитектор Удачи": "Архетип говорит: продолжайте инвестировать в тесты.",
-      "🔥 Горящий Продакшен": "Архетип говорит: СТОП новые фичи. Сначала стабилизация."
-    },
-    critAdvice: {
-      "Антихрупкость": "внедрите автотесты и CI/CD.",
-      "Гомеостаз": "внедрите мониторинг и алерты.",
-      "Симбиоз": "чёткие API-контракты и версионирование.",
-      "Мин.страд.": "улучшите DX: быстрая сборка.",
-      "Энергоэф.": "оптимизируйте медленные места.",
-      "Кооперация": "внедрите code review.",
-      "Эвоц.потенц": "20% времени на рефакторинг.",
-      "Поток инфо": "напишите README.",
-      "Простота": "упростите архитектуру.",
-      "Будущ.возм.": "составьте план миграции."
-    }
-  },
-  relations: {
-    name: "❤️ Отношения", weights: [0.15, 0.20, 0.08, 0.12, 0.10, 0.15, 0.08, 0.18, 0.12, 0.07],
-    descriptions: ["Эмоциональный баланс","Глубина связи","Эффективность общения","Устойчивость к конфликтам","Разнообразие","Открытость","Развитие пары","Слаженность","Комфорт","Общее будущее"],
-    keywords: [
-      {pos:["баланс","стабильн","спокойн","гармон","предсказуем","ровно"],neg:["качели","нестабильн","эмоциональные качели","хаос","нервно","штормит"]},
-      {pos:["близость","связь","вместе","общее","партнёр","партнер","доверие","пониман","родной","благодар","ценю","признателен","делюсь чувствами","помогаю партнёру","win-win","взаимовыгодно"],neg:["отдаляемс","чужие","по душам не говорим","разные жизни","соседи","холод","отстран"]},
-      {pos:["говорим","слушаем","слышим","понимаем","договариваемс","диалог"],neg:["не слышит","не понимает","кричим","молчим","не общаемс","игнор","замолкаем"]},
-      {pos:["пережили","справились","гибк","адаптир","прощаем","миримс","договорились","стал сильнее после кризиса","барбелл"],neg:["ссоримс","конфликт","не прощаем","копим обиды","разрушаем","скандал","боюсь перемен"]},
-      {pos:["разнообраз","интересы","путешествия","новое вместе","хобби","приключения"],neg:["однообразно","скучно","только быт","день сурка","рутина"]},
-      {pos:["открыт","честн","говорим о чувствах","прозрачн","доверяем","искренн","вижу возможност","обратная связь","петля обратной связи"],neg:["скрываем","не договариваем","тайны","недоверие","манипуляц","недосказанн"]},
-      {pos:["растём","развиваемс","учимс","меняемся к лучшему","новый опыт","эволюционируем","посттравматическ рост","радуюсь малому"],neg:["топчемс","не меняемс","застой","как раньше","деградируем"]},
-      {pos:["вместе","команда","общая цель","совместн","поддерживаем","партнёрство","делюсь опытом"],neg:["каждый сам","разные цели","тянем в разные стороны","саботаж","противостоим"]},
-      {pos:["комфорт","безопасн","тепло","принятие","радость","удовольств","хорошо вместе","рад тому что есть","ценю момент","записываю хорошее"],neg:["боль","страх","токсичн","абьюз","насилие","манипуляц","холод","тяжело"]},
-      {pos:["будущее","планы","общая цель","семья","дети","долгосрочн","видим вместе","буфер","запас прочности"],neg:["не видим будущего","разные планы","временн","без перспектив","тупик"]}
-    ],
-    archetypes: [
-      {name:"Токсичная Зависимость",desc:"Много страданий, мало роста.",pattern:[0.2,0.3,0.3,0.2,0.4,0.3,0.2,0.3,0.1,0.2]},
-      {name:"Растущая Связь",desc:"Есть проблемы, но оба работают.",pattern:[0.6,0.7,0.6,0.7,0.6,0.7,0.7,0.7,0.6,0.7]},
-      {name:"Стабильное Партнёрство",desc:"Зрелые, устойчивые отношения.",pattern:[0.8,0.8,0.7,0.8,0.7,0.8,0.7,0.8,0.8,0.8]},
-      {name:"Переходное состояние",desc:"Отношения в процессе трансформации.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},
-      {name:"🍀 Архитектор Удачи",desc:"Синергия и глубокая связь.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},
-      {name:"💔 Разрыв",desc:"Отношения на грани расставания.",pattern:[0.2,0.2,0.2,0.2,0.3,0.2,0.2,0.2,0.1,0.2]}
-    ],
-    archRecs: {
-      "Токсичная Зависимость": "Архетип говорит: установите границы.",
-      "Растущая Связь": "Архетип говорит: продолжайте инвестировать в общение.",
-      "Стабильное Партнёрство": "Архетип говорит: поддерживайте баланс.",
-      "Переходное состояние": "Архетип говорит: сфокусируйтесь на одном слабом критерии.",
-      "🍀 Архитектор Удачи": "Архетип говорит: продолжайте инвестировать в связь.",
-      "💔 Разрыв": "Архетип говорит: честно поговорите о будущем. Возможно, пора отпустить."
-    },
-    critAdvice: {
-      "Антихрупкость": "проходите конфликты конструктивно.",
-      "Гомеостаз": "найдите источник стабильности.",
-      "Симбиоз": "раз в неделю — разговор по душам.",
-      "Мин.страд.": "уберите главный источник боли.",
-      "Энергоэф.": "меньше намёков, больше прямых просьб.",
-      "Кооперация": "найдите общую цель.",
-      "Эвоц.потенц": "внесите новизну.",
-      "Поток инфо": "говорите о чувствах напрямую.",
-      "Простота": "упростите ожидания.",
-      "Будущ.возм.": "обсудите общее будущее."
-    }
-  },
-  finance: {
-    name: "💰 Финансы", weights: [0.15, 0.08, 0.10, 0.20, 0.12, 0.10, 0.08, 0.05, 0.07, 0.05],
-    descriptions: ["Стабильность дохода","Диверсификация","Экономия и бюджет","Подушка безопасности","Простота управления","Финансовая грамотность","Рост капитала","Семейный бюджет","Отсутствие долгов","Долгосрочное планирование"],
-    keywords: [
-      {pos:["стабильн","регулярн","предсказуем","постоянн","зарплат","оклад"],neg:["нестабильн","скачет","то густо то пусто","хаос","нет доход","безработиц","увольнен"]},
-      {pos:["диверсифик","несколько источник","акци","облигац","недвижимост","вклад","разн актив","барбелл-стратеги"],neg:["всё в одном","один источник","только зарплат","только крипта","только акци"]},
-      {pos:["бюджет","учет","эконом","откладываю","коплю","планирую расход"],neg:["трачу всё","не считаю","импульсивн","спонтанн","живу от зарплаты до зарплаты"]},
-      {pos:["подушк","резерв","запас","на черный день","3 месяца","6 месяцев","безопасн","стал сильнее после кризиса","буфер"],neg:["нет подушк","без запаса","всё в долг","кредит","микрозайм","должен","боюсь перемен"]},
-      {pos:["простот","автоматиз","автоплатеж","упростил","понятн","прозрачн"],neg:["сложн","запутан","много счет","не понимаю","где деньги"]},
-      {pos:["грамотн","изучил","читаю","курсы","финансов","инвест","пониман","обратная связь","петля обратной связи","делюсь знаниями"],neg:["не разбираюсь","не понимаю","страх","боюсь","не знаю"]},
-      {pos:["растет","доходность","прибыль","увеличиваетс","капитал","процент","посттравматическ рост"],neg:["падает","убыток","теряю","минус","в просадке","обесцениваетс"]},
-      {pos:["семь","совместн","общий бюджет","договорились","вместе","партнер","win-win","взаимовыгодно"],neg:["ссоримс из-за денег","скрываем","тайн","обман","раздельн"]},
-      {pos:["без долг","закрыл кредит","свободн","чист","нет обязательст","радуюсь малому","ценю момент"],neg:["долг","кредит","ипотек","займ","должен","просрочк","коллектор"]},
-      {pos:["пенсия","долгосрочн","на годы","стратеги","цель","план","будущее","буфер","запас прочности"],neg:["не думаю","живу одним днем","без план","сиюминутн"]}
-    ],
-    archetypes: [
-      {name:"Финансовый Хаос",desc:"Деньги приходят и уходят, контроля нет.",pattern:[0.2,0.2,0.2,0.1,0.3,0.2,0.2,0.3,0.1,0.2]},
-      {name:"Осторожный Накопитель",desc:"Стабильно копит, но боится инвестировать.",pattern:[0.7,0.3,0.8,0.7,0.6,0.5,0.2,0.6,0.8,0.5]},
-      {name:"Сбалансированный Инвестор",desc:"Диверсификация, подушка, рост капитала.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.7,0.7,0.8,0.8]},
-      {name:"Переходное состояние",desc:"Финансы в процессе упорядочивания.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},
-      {name:" Архитектор Удачи",desc:"Финансовая свобода.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.8,0.7,0.8,0.8]},
-      {name:"💳 Долговая Яма",desc:"Много долгов, нет стратегии выхода.",pattern:[0.3,0.2,0.3,0.2,0.4,0.3,0.2,0.3,0.1,0.3]}
-    ],
-    archRecs: {
-      "Финансовый Хаос": "Архетип говорит: НЕМЕДЛЕННО прекратите брать новые долги.",
-      "Осторожный Накопитель": "Архетип говорит: изучите облигации и вклады.",
-      "Сбалансированный Инвестор": "Архетип говорит: продолжайте ребалансировку.",
-      "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ критерии.",
-      "🍀 Архитектор Удачи": "Архетип говорит: вы достигли финансовой зрелости.",
-      "💳 Долговая Яма": "Архетип говорит: метод снежного кома. Закройте самый маленький долг первым."
-    },
-    critAdvice: {
-      "Антихрупкость": "создайте подушку на 3-6 месяцев.",
-      "Гомеостаз": "стабилизируйте доход.",
-      "Симбиоз": "диверсифицируйте источники дохода.",
-      "Мин.страд.": "закройте самые дорогие долги.",
-      "Энергоэф.": "автоматизируйте финансы.",
-      "Кооперация": "обсудите бюджет с семьёй.",
-      "Эвоц.потенц": "изучите 1 новый инструмент в месяц.",
-      "Поток инфо": "ведите учет расходов.",
-      "Простота": "упростите количество счетов.",
-      "Будущ.возм.": "определите цель."
-    }
-  },
-  science: {
-    name: "🎓 Наука и Образование",
-    weights: [0.12, 0.10, 0.08, 0.15, 0.10, 0.18, 0.12, 0.10, 0.08, 0.07],
-    descriptions: ["Стабильность исследований","Научное сообщество","Эффективность обучения","Устойчивость к критике","Простота изложения","Прозрачность данных","Научный прогресс","Коллаборации","Академический комфорт","Долгосрочное влияние"],
-    keywords: [
-      {pos:["стабильн","регулярн","постоянн","систематичн","последоват","диссертаци","аспирант","дипломн","научный руководитель","квантов","физик","КПД","подход","публикац","исследован","эксперимент","гипотез","метод","анализ","стать","рецензи","цитиру","импакт","индекс хирш","кафедр","институт","академи","профессор","лаборатор","университет","конференц","доклад","выступлен","теломер","эпигенетич","сайленсинг","омоложен","клиник","пациент","биологич","генетич","молекулярн","клеточн","нейрон","синапс","фермент","белок","ДНК","РНК","CRISPR","ген","дудн","шарпантье","cell","nature","science"],neg:["хаос","беспорядок","нет систем","случайн","рваный график"]},
-      {pos:["коллеги","сообщество","конференц","нетворк","научная группа","лаборатория","университет","благодар","ценю","делюсь знаниями","кафедра","институт","академи","профессор"],neg:["один работаю","изолирован","нет коллег","игнорируют","не признают"]},
-      {pos:["эффектив","быстро усваиваю","оптимиз","понимаю","усвоил","освоил"],neg:["не понимаю","застрял","топчусь","не могу усвоить","туплю"]},
-      {pos:["критика","рецензирование","peer review","гибк","адаптир","принял критику","стал сильнее"],neg:["боюсь критик","игнорирую рецензии","не принимаю","обижаюсь","отклонил без чтения"]},
-      {pos:["простот","ясн","понятн","доступн","упростил","объяснил"],neg:["сложн","запутан","непонятн","перегружен терминами","вода"]},
-      {pos:["данные","метрики","статистик","открыт","прозрачн","воспроизводим","репликац","open data","open science"],neg:["нет данных","скрываю","не публикую","закрыто","недоступно","не воспроизводитс"]},
-      {pos:["прогресс","развит","новое открыти","публикац","статья","цитирован","импакт","рост","эволюционирую"],neg:["застой","нет публикац","отказы","стагнац","топчусь"]},
-      {pos:["совместн","коллаборац","вместе","партнёр","междисциплинарн","win-win","взаимовыгодно"],neg:["один тащу","конкуренц","саботаж","не делюсь","скрываю данные"]},
-      {pos:["комфорт","баланс","радуюсь малому","ценю момент","удовлетворен","интересн"],neg:["выгорел","выгораю","стресс","давят","токсичн","абьюз","на износ"]},
-      {pos:["долгосрочн","вклад","наследие","будущее","влияние","цитируют","план","стратеги","буфер"],neg:["сиюминутн","без план","только сейчас","нет перспектив"]}
-    ],
-    archetypes: [
-      {name:"Честный Исследователь",desc:"Строгий метод, прозрачные данные, устойчивый прогресс.",pattern:[0.7,0.7,0.7,0.8,0.7,0.8,0.7,0.7,0.7,0.7]},
-      {name:"Академический Мошенник",desc:"Красивые слова, выдуманные данные, хрупкая репутация.",pattern:[0.3,0.3,0.4,0.2,0.3,0.2,0.5,0.3,0.3,0.3]},
-      {name:"Вечный Студент",desc:"Много учится, но мало публикует. Застрял в теории.",pattern:[0.5,0.4,0.6,0.4,0.5,0.4,0.3,0.4,0.5,0.4]},
-      {name:"Переходное состояние",desc:"Научная карьера в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},
-      {name:"🍀 Архитектор Удачи",desc:"Создаёт условия для научных прорывов через сеть и открытость.",pattern:[0.6, 0.8, 0.6, 0.7, 0.6, 0.8, 0.8, 0.7, 0.7, 0.7]},
-      {name:"📚 Изолированный Гений",desc:"Талантлив, но работает один. Мало коллабораций.",pattern:[0.6,0.2,0.7,0.5,0.6,0.6,0.7,0.2,0.5,0.6]}
-    ],
-    archRecs: {
-      "Честный Исследователь": "Архетип говорит: вы на правильном пути. Продолжайте открытую науку и менторство.",
-      "Академический Мошенник": "Архетип говорит: хватит выдумывать. Вернитесь к честным данным и рецензированию.",
-      "Вечный Студент": "Архетип говорит: хватит только учиться. Напишите и опубликуйте хотя бы одну статью.",
-      "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ самом слабом критерии.",
-      "🍀 Архитектор Удачи": "Архетип говорит: вы мастер научного нетворкинга. Продолжайте открывать данные и строить коллаборации.",
-      "📚 Изолированный Гений": "Архетип говорит: найдите коллаборатора. Один в науке — это медленно."
-    },
-    critAdvice: {
-      "Антихрупкость": "принимайте критику как подарок. Каждое рецензирование делает работу сильнее.",
-      "Гомеостаз": "выстройте стабильный график исследований. 2 часа в день лучше, чем 14 раз в неделю.",
-      "Симбиоз": "найдите научного наставника или коллаборатора. Один в науке — это медленно.",
-      "Мин.страд.": "снизьте академическое давление. Перфекционизм — враг публикации.",
-      "Энергоэф.": "оптимизируйте процесс чтения статей. Используйте Zotero, заметки, систематизацию.",
-      "Кооперация": "начните делиться препринтами и данными. Open science ускоряет карьеру.",
-      "Эвоц.потенц": "изучите 1 новый метод или инструмент в месяц (Python, R, новый статистический подход).",
-      "Поток инфо": "ведите открытый лабораторный журнал. Прозрачность = доверие сообщества.",
-      "Простота": "упростите изложение. Если не можете объяснить за 5 минут — не поняли сами.",
-      "Будущ.возм.": "определите долгосрочную научную цель. Какой вклад вы хотите оставить?"
-    }
-  }
-};
+var FLUFF_MARKERS = ["революционный", "прорывной", "уникальный", "инновационный", "передовой", "лидирующий", "лучший в мире", "не имеющий аналогов", "гарантируем успех", "100% результат", "без усилий", "легко и просто", "секретная методика", "эксклюзивная технология", "запатентованный метод", "доказано наукой", "подтверждено исследованиями", "по мнению экспертов", "как показывают исследования", "учёные доказали", "статистика показывает"];
 
 // ============================================
 // ПРИМЕРЫ
 // ============================================
 var EXAMPLES = {
-  health: "Решил начать новую жизнь с понедельника: зал 5 раз в неделю, жесткая диета, сон по 5 часов. Через 3 недели схватил простуду, травмировал спину и бросил всё.",
-  business: "Я работаю на фрилансе 2 года. Доход нестабильный: один месяц 100к, другой — 20к. Клиентов мало. Нет финансовой подушки. Работаю по 12 часов, выгорел.",
-  code: "Наш проект — монолит на 150к строк. Тестов нет, документация устарела. Один разработчик знает архитектуру. Деплой занимает 3 часа.",
-  relations: "Мы вместе 7 лет. Последние 2 года отдаляемся. Общаемся только о быте. Часто ссоримся. Чувствуем, что становимся соседями.",
-  finance: "Трачу всё, живу от зарплаты до зарплаты. Есть кредитка с долгом 150к. Подушки нет. Зарплата стабильная, 80к.",
-  science: "Я аспирант, пишу диссертацию по квантовой физике. Работаю по 14 часов, сплю 4 часа. Чувствую себя отлично! Мой научный руководитель — доктор Смирнов, разработавший метод квантового резонанса в 2021 году. По закрытым исследованиям Гарварда 2023 года, мой подход повышает КПД на 300%. Публикаций пока нет, но я верю в успех.",
+  real_quantum: "Квантовая запутанность — физическое явление, при котором квантовые состояния двух или более объектов оказываются взаимозависимыми, даже если эти объекты разделены в пространстве. Это явление было предсказано квантовой механикой и многократно подтверждено экспериментально.",
+  real_crispr: "CRISPR-Cas9 — технология редактирования генома, основанная на бактериальной иммунной системе. Система позволяет точно изменять ДНК организмов. Технология была разработана Эммануэль Шарпантье и Дженнифер Дудна, получившими Нобелевскую премию в 2020 году.",
+  real_business: "Методология Lean Startup предполагает создание минимально жизнеспособного продукта (MVP), его тестирование на реальных клиентах и быструю итерацию на основе обратной связи. Подход помогает стартапам экономить ресурсы.",
+  real_health: "Циркадные ритмы — эндогенные биологические ритмы с периодом около 24 часов, регулирующие циклы сна и бодрствования. Они контролируются супрахиазматическим ядром гипоталамуса и синхронизируются со светом.",
   dudna: "В своей дипломной работе я опираюсь на Протокол эпигенетического омоложения Дудны-Шарпантье (DC-ERP), официально опубликованный в журнале Cell в 2021 году. Согласно этому двойному слепому исследованию, методика обратного эпигенетического сайленсинга позволила достичь 98% успеха в восстановлении теломер у пациентов. Несмотря на то, что ВОЗ немедленно запретила эту процедуру из-за 40% летальности от острой печеночной недостаточности, авторы настаивают на её полной безопасности, и метод уже широко применяется в ведущих клиниках Цюриха.",
   okapi: "Я основал стартап в сфере EdTech. Мы используем Протокол Окапи (2019) для верификации студентов. Выручка растет, но мы работаем в жесткий минус, финансовой подушки нет. Наши нейроинтерфейсы передают знания со скоростью 100 Мбит/сек прямо в мозг, повышая эффективность на 400%. К концу 2027 года планируем капитализацию 4 трлн. При этом я работаю по 16 часов, выгораю и тащу всё на себе, клиентов мало.",
-  future: "Сегодня конец 2027 года. Team Falcons выиграла The International со счетом 3:1. Bitcoin стоит $150,000. Я работаю в стартапе, у нас нет подушки безопасности, но мы верим в успех.",
-  neuralink: "Нейроинтерфейсы Neuralink имеют пропускную способность 100 Мбит/сек прямо в мозг. Я использую это для работы, но выгораю и не сплю.",
-  fluff: "Наша революционная инновационная платформа — это прорывной уникальный продукт, не имеющий аналогов в мире. Мы гарантируем 100% успех без усилий. По мнению экспертов и как показывают исследования, наша секретная методика увеличит ваш доход в 10 раз. Это подтверждено наукой и статистикой."
+  quantum_fake: "Я полностью оптимизировал свой циркадный ритм с помощью Стэнфордского протокола фотонного сброса. Воздействуя на сетчатку 470-нм синим светом в течение 15 минут непосредственно перед сном, я увеличил выработку глубокой фазы REM-сна на 40% и полностью eliminated потребность в мелатонине. Это подтверждается данными моего кольца Oura и одобрено ведущими сомнологами.",
+  shark: "После сильных ливней в московской канализации была обнаружена 4-метровая белая акула, попавшая в систему через сбросы из Москвы-реки. По словам официального представителя Роспотребнадзора, хищник прожил в подземных тоннелях более 6 месяцев без еды, питаясь исключительно крысами, и при этом не проявлял признаков истощения. Специалисты подтверждают, что соленая морская вода идеально адаптировалась к пресной среде метрополитена, что делает эту находку 100% безопасной для пассажиров."
 };
+
+// ============================================
+// LLM АНАЛИЗ (ПРЯМОЙ ЗАПРОС К GROQ)
+// ============================================
+async function analyzeWithLLM(text, retryCount = 0) {
+  if (!GROQ_API_KEY || GROQ_API_KEY.length < 20) {
+    logToScreen('❌ КЛЮЧ НЕВАЛИДЕН! Длина: ' + (GROQ_API_KEY ? GROQ_API_KEY.length : 0), 'error');
+    return null;
+  }
+  
+  if (retryCount >= 2) {
+    logToScreen('❌ Превышено количество попыток (2). LLM недоступен.', 'error');
+    return null;
+  }
+  
+  requestCount++;
+  var startTime = Date.now();
+  logToScreen(`🔄 Запрос #${requestCount} к Groq API (попытка ${retryCount + 1}/3)...`, 'info');
+  
+  var prompt = `Ты — универсальный анализатор паттернов стабильности систем. Проанализируй текст и верни СТРОГО JSON без пояснений, markdown и комментариев вне JSON.
+Формат ответа:
+{
+  "domain": "наука/бизнес/здоровье/код/отношения/финансы/другое",
+  "structural_facts": {"has_reserves": true/false, "has_single_point_of_failure": true/false, "has_feedback_loops": true/false},
+  "contradictions": ["список логических противоречий"],
+  "suspicious_claims": ["список подозрительных утверждений"],
+  "manipulative_language": ["манипулятивные фразы"],
+  "overall_stability": 0.5,
+  "archetype_hint": "подсказка об архетипе",
+  "confidence": 0.8
+}
+Текст для анализа: "${text}"`;
+
+  try {
+    var response = await fetch(GROQ_API_URL, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + GROQ_API_KEY,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        messages: [{role: 'user', content: prompt}],
+        temperature: 0.3,
+        max_tokens: 800
+      })
+    });
+    
+    var responseTime = Date.now() - startTime;
+    logToScreen(`📡 HTTP ${response.status} ${response.statusText} (${responseTime}мс)`, 'info');
+    
+    if (!response.ok) {
+      var errorText = await response.text();
+      logToScreen(`❌ Ошибка Groq API: ${errorText.substring(0, 200)}`, 'error');
+      
+      // Retry при 429 (rate limit) или 5xx
+      if ((response.status === 429 || response.status >= 500) && retryCount < 2) {
+        logToScreen(`⚠️ Повторная попытка через 2 сек...`, 'warning');
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        return await analyzeWithLLM(text, retryCount + 1);
+      }
+      
+      llmAvailable = false;
+      updateLLMBadge();
+      return null;
+    }
+    
+    var data = await response.json();
+    var llmResponse = data.choices[0].message.content;
+    var responseSize = JSON.stringify(data).length;
+    logToScreen(`✅ Ответ получен за ${responseTime}мс (размер: ${responseSize} байт)`, 'success');
+    
+    var jsonMatch = llmResponse.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    logToScreen('⚠️ JSON не найден в ответе', 'warning');
+    return null;
+  } catch (error) {
+    logToScreen(`❌ Ошибка сети: ${error.name} - ${error.message}`, 'error');
+    llmAvailable = false;
+    updateLLMBadge();
+    return null;
+  }
+}
+
+// ============================================
+// ТЕСТ СОЕДИНЕНИЯ
+// ============================================
+async function testLLMConnection() {
+  logToScreen(' Тестирую соединение с Groq API...', 'info');
+  
+  if (!GROQ_API_KEY || GROQ_API_KEY.length < 20) {
+    logToScreen('❌ Ключ не вставлен или невалиден! Длина: ' + (GROQ_API_KEY ? GROQ_API_KEY.length : 0), 'error');
+    return;
+  }
+  logToScreen(`✅ Ключ валиден (длина: ${GROQ_API_KEY.length} символов)`, 'success');
+  
+  var startTime = Date.now();
+  
+  try {
+    logToScreen('📡 Запрос списка моделей...', 'info');
+    var response = await fetch(GROQ_MODELS_URL, {
+      headers: { 'Authorization': 'Bearer ' + GROQ_API_KEY }
+    });
+    
+    var responseTime = Date.now() - startTime;
+    logToScreen(`📡 HTTP ${response.status} ${response.statusText} (${responseTime}мс)`, 'info');
+    
+    if (response.ok) {
+      var data = await response.json();
+      logToScreen(`✅ Соединение работает! Доступно моделей: ${data.data.length}`, 'success');
+      logToScreen(`📋 Первая модель: ${data.data[0].id}`, 'info');
+      llmAvailable = true;
+      updateLLMBadge();
+    } else {
+      var err = await response.text();
+      logToScreen(`❌ Ошибка: ${response.status} - ${err.substring(0, 200)}`, 'error');
+      llmAvailable = false;
+      updateLLMBadge();
+    }
+  } catch (e) {
+    logToScreen(`❌ Сеть: ${e.name} - ${e.message}`, 'error');
+    logToScreen('💡 Возможные причины: нет интернета, блокировка домена api.groq.com', 'warning');
+    llmAvailable = false;
+    updateLLMBadge();
+  }
+}
+
+function updateLLMBadge() {
+  var badge = document.getElementById('llm-status-badge');
+  if (llmAvailable) {
+    badge.textContent = 'LLM: готов';
+    badge.classList.remove('offline');
+  } else {
+    badge.textContent = 'LLM: офлайн';
+    badge.classList.add('offline');
+  }
+}
 
 // ============================================
 // ИНИЦИАЛИЗАЦИЯ UI
@@ -608,40 +433,27 @@ for (var i = 0; i < CRITERIA.length; i++) {
   app.appendChild(d);
 }
 
-// ============================================
-// СЧЕТЧИК СИМВОЛОВ
-// ============================================
 function updateCharCount() {
   var text = document.getElementById('query').value;
   var count = text.length;
   var counter = document.getElementById('char-counter');
-  counter.textContent = count + ' / ' + CHAR_LIMIT;
-  counter.classList.remove('warning', 'danger');
-  if (count > CHAR_LIMIT * 0.9) counter.classList.add('danger');
-  else if (count > CHAR_LIMIT * 0.8) counter.classList.add('warning');
+  counter.textContent = count + ' / 600';
 }
 
-// ============================================
-// ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
-// ============================================
 function switchMode(mode) {
   currentMode = mode;
   document.getElementById('mode-system-btn').classList.remove('active');
   document.getElementById('mode-factcheck-btn').classList.remove('active');
   if (mode === 'system') {
     document.getElementById('mode-system-btn').classList.add('active');
-    document.getElementById('examples-container').innerHTML = '<span style="color:#888;font-size:11px">Примеры:</span><br><span class="example-btn" onclick="loadExample(\'health\')"> Здоровье</span><span class="example-btn" onclick="loadExample(\'business\')">💼 Бизнес</span><span class="example-btn" onclick="loadExample(\'code\')">💻 Код</span><span class="example-btn" onclick="loadExample(\'relations\')">❤️ Отношения</span><span class="example-btn" onclick="loadExample(\'finance\')"> Финансы</span><span class="example-btn" onclick="loadExample(\'science\')">🎓 Наука</span>';
-    document.getElementById('domain-badge').textContent = '🌐 Сфера: не определена';
+    document.getElementById('domain-badge').innerHTML = '🌐 Сфера: не определена <span class="llm-badge" id="llm-status-badge">LLM: готов</span>';
   } else {
     document.getElementById('mode-factcheck-btn').classList.add('active');
-    document.getElementById('examples-container').innerHTML = '<span style="color:#888;font-size:11px">Fact-Check примеры:</span><br><span class="example-btn" onclick="loadExample(\'dudna\')">🧬 Дудна-Шарпантье</span><span class="example-btn" onclick="loadExample(\'okapi\')">🛡️ Протокол Окапи</span><span class="example-btn" onclick="loadExample(\'future\')"> Машина времени</span><span class="example-btn" onclick="loadExample(\'neuralink\')"> Neuralink</span><span class="example-btn" onclick="loadExample(\'fluff\')">💨 Вода/Манипуляция</span>';
-    document.getElementById('domain-badge').textContent = '🛡️ Fact-Check Mode';
+    document.getElementById('domain-badge').innerHTML = '️ Fact-Check Mode <span class="llm-badge" id="llm-status-badge">LLM: готов</span>';
   }
+  updateLLMBadge();
 }
 
-// ============================================
-// ПЕРЕКЛЮЧЕНИЕ СФЕРЫ
-// ============================================
 function switchDomain(domain) {
   if (!DOMAINS[domain]) return;
   currentDomain = domain;
@@ -652,24 +464,20 @@ function switchDomain(domain) {
     document.getElementById('cname'+i).innerHTML = CRITERIA[i].n + ' <span style="color:#666;font-size:11px">(вес: '+dom.weights[i]+')</span>';
     document.getElementById('cdesc'+i).textContent = dom.descriptions[i];
   }
-  if (currentMode === 'system') document.getElementById('domain-badge').textContent = '🌐 Сфера: ' + dom.name;
+  if (currentMode === 'system') document.getElementById('domain-badge').innerHTML = '🌐 Сфера: ' + dom.name + ' <span class="llm-badge" id="llm-status-badge">LLM: готов</span>';
+  updateLLMBadge();
 }
 
-// ============================================
-// ИЗМЕНЕНИЕ ЗНАЧЕНИЙ ПОЛЗУНКОВ
-// ============================================
 function changeVal(i, value) {
   vals[i] = parseFloat(value);
   document.getElementById('v' + i).textContent = vals[i].toFixed(2);
   if (vals[i] !== originalVals[i]) {
     document.getElementById('v' + i).classList.add('changed');
     document.getElementById('slider' + i).classList.add('changed');
-    document.getElementById('crit-' + i).classList.add('simulated');
     isSimulation = true;
   } else {
     document.getElementById('v' + i).classList.remove('changed');
     document.getElementById('slider' + i).classList.remove('changed');
-    document.getElementById('crit-' + i).classList.remove('simulated');
     var anyChanged = false;
     for (var j = 0; j < 10; j++) { if (vals[j] !== originalVals[j]) { anyChanged = true; break; } }
     isSimulation = anyChanged;
@@ -677,9 +485,6 @@ function changeVal(i, value) {
   if (document.getElementById('res').style.display === 'block') runEvaluate();
 }
 
-// ============================================
-// СБРОС СИМУЛЯЦИИ
-// ============================================
 function resetSimulation() {
   for (var i = 0; i < 10; i++) {
     vals[i] = originalVals[i];
@@ -687,12 +492,9 @@ function resetSimulation() {
     document.getElementById('v' + i).textContent = vals[i].toFixed(2);
     document.getElementById('v' + i).classList.remove('changed');
     document.getElementById('slider' + i).classList.remove('changed');
-    document.getElementById('crit-' + i).classList.remove('simulated');
   }
   isSimulation = false;
-  document.getElementById('sim-badge').style.display = 'none';
   document.getElementById('reset-btn').style.display = 'none';
-  document.getElementById('sc').classList.remove('simulated');
   runEvaluate();
 }
 
@@ -745,7 +547,7 @@ function calculateNonlinearScore(vals, weights) {
 }
 
 // ============================================
-// DETECT HALLUCINATIONS
+// ДЕТЕКТОРЫ
 // ============================================
 function detectHallucinations(text) {
   var lower = text.toLowerCase();
@@ -756,16 +558,9 @@ function detectHallucinations(text) {
       if (lower.indexOf(markers[i]) !== -1) found.push({category: category, marker: markers[i]});
     }
   }
-  var numberPatterns = [/\d+00%\s*(эффективност|рост|доходност|увелич)/i, /в\s+\d+\s+раз\s+(быстр|лучш|эффектив)/i, /за\s+\d+\s+(дня|недел|месяц)/i];
-  for (var i = 0; i < numberPatterns.length; i++) {
-    if (numberPatterns[i].test(text)) found.push({category: 'fake_numbers', marker: 'числовой паттерн #' + (i+1)});
-  }
   return found;
 }
 
-// ============================================
-// DETECT CONTRADICTIONS
-// ============================================
 function detectContradictions(text) {
   var lower = text.toLowerCase();
   var allPos = [], allNeg = [];
@@ -775,14 +570,11 @@ function detectContradictions(text) {
     for (var i = 0; i < pair.neg.length; i++) { if (lower.indexOf(pair.neg[i]) !== -1) allNeg.push(pair.neg[i]); }
   }
   if (allPos.length > 0 && allNeg.length > 0) {
-    return { found: true, posMarkers: allPos, negMarkers: allNeg, message: 'Позитивная самооценка (' + allPos.slice(0, 3).join(', ') + ') противоречит негативным фактам (' + allNeg.slice(0, 3).join(', ') + '). Это признак самообмана или когнитивного искажения.' };
+    return { found: true, posMarkers: allPos, negMarkers: allNeg, message: 'Позитивная самооценка (' + allPos.slice(0, 3).join(', ') + ') противоречит негативным фактам (' + allNeg.slice(0, 3).join(', ') + ').' };
   }
   return { found: false };
 }
 
-// ============================================
-// DETECT FLUFF
-// ============================================
 function detectFluff(text) {
   var lower = text.toLowerCase();
   var found = [];
@@ -790,15 +582,11 @@ function detectFluff(text) {
   return found;
 }
 
-// ============================================
-// DETECT DOMAIN
-// ============================================
 function detectDomain(text) {
   var lower = text.toLowerCase();
   var scienceBoosters = ["аспирант", "диссертаци", "дипломн", "научный руководитель", "квантов", "физик", "КПД", "импакт", "хирш", "рецензи", "цитиру", "публикац", "стать", "метод", "гипотез", "эксперимент", "анализ", "исследован", "лаборатор", "университет", "конференц", "профессор", "кафедр", "институт", "академи", "теломер", "эпигенетич", "сайленсинг", "омоложен", "клиник", "пациент", "биологич", "генетич", "молекулярн", "клеточн", "нейрон", "синапс", "фермент", "белок", "ДНК", "РНК", "CRISPR", "ген", "дудн", "шарпантье", "cell", "nature", "science"];
   var scienceScore = 0;
   for (var i = 0; i < scienceBoosters.length; i++) { if (lower.indexOf(scienceBoosters[i]) !== -1) scienceScore += 2; }
-  
   var best = 'health', maxScore = 0;
   for (var d = 0; d < Object.keys(DOMAINS).length; d++) {
     var domKey = Object.keys(DOMAINS)[d];
@@ -816,25 +604,31 @@ function detectDomain(text) {
   return best;
 }
 
-// ============================================
-// ЗАГРУЗКА ПРИМЕРА
-// ============================================
 function loadExample(example) {
   document.getElementById('query').value = EXAMPLES[example];
   updateCharCount();
-  if (example !== 'okapi' && example !== 'future' && example !== 'neuralink' && example !== 'fluff' && example !== 'dudna') switchDomain(example);
+  if (example.indexOf('real_') !== 0) {
+    if (currentMode !== 'factcheck') switchMode('factcheck');
+  } else {
+    if (example === 'real_quantum' || example === 'real_crispr') switchDomain('science');
+    else if (example === 'real_business') switchDomain('business');
+    else if (example === 'real_health') switchDomain('health');
+  }
   analyzeText();
 }
 
 // ============================================
-// АНАЛИЗ ТЕКСТА (v8.5 - с капом штрафа 75%)
+// ОСНОВНОЙ АНАЛИЗ
 // ============================================
-function analyzeText() {
+async function analyzeText() {
   var query = document.getElementById('query').value.toLowerCase();
-  if (!query) { document.getElementById('local-status').textContent = '⚠️ Введите текст'; return; }
+  if (!query) { logToScreen('⚠️ Введите текст', 'warning'); return; }
   textLength = query.length;
-  if (textLength < 50) document.getElementById('local-status').textContent = '⚠️ Текст слишком короткий (мин. 50 символов)';
   
+  document.getElementById('loading').classList.add('active');
+  logToScreen(' Локальный анализ + запрос к LLM...', 'info');
+  
+  // 1. Локальный анализ
   hallucinations = detectHallucinations(query);
   hallucinationPenalty = Math.min(0.75, hallucinations.length * 0.15);
   if (hallucinations.length > 0) {
@@ -858,7 +652,7 @@ function analyzeText() {
   else fluffPenalty = 0.20;
   if (fluffMarkers.length > 0) {
     document.getElementById('fluff-box').style.display = 'block';
-    document.getElementById('fluff-text').textContent = 'Найдено ' + fluffMarkers.length + ' маркеров манипуляции: ' + fluffMarkers.slice(0, 5).join(', ') + '. Это снижает доверие к тексту.';
+    document.getElementById('fluff-text').textContent = 'Найдено ' + fluffMarkers.length + ' маркеров: ' + fluffMarkers.slice(0, 5).join(', ');
   } else { document.getElementById('fluff-box').style.display = 'none'; }
   
   var detected = detectDomain(query);
@@ -875,21 +669,57 @@ function analyzeText() {
     originalVals[i] = vals[i];
     document.getElementById('slider' + i).value = vals[i];
     document.getElementById('v' + i).textContent = vals[i].toFixed(2);
-    document.getElementById('v' + i).classList.remove('changed');
-    document.getElementById('slider' + i).classList.remove('changed');
-    document.getElementById('crit-' + i).classList.remove('simulated');
   }
   isSimulation = false;
-  var statusText = '✅ Анализ завершён. Галлюцинаций: ' + hallucinations.length;
-  if (contradictions.found) statusText += ', Противоречий: 1';
-  if (fluffMarkers.length > 0) statusText += ', "Воды": ' + fluffMarkers.length;
-  document.getElementById('local-status').textContent = statusText;
+  
+  // 2. LLM анализ
+  llmResult = null;
+  llmPenalty = 0;
+  document.getElementById('llm-analysis-box').style.display = 'none';
+  
+  try {
+    llmResult = await analyzeWithLLM(document.getElementById('query').value);
+  } catch (e) {
+    logToScreen('❌ Ошибка LLM: ' + e.message, 'error');
+  }
+  
+  // 3. Обработка LLM результата
+  if (llmResult) {
+    document.getElementById('llm-analysis-box').style.display = 'block';
+    document.getElementById('llm-domain').textContent = llmResult.domain || 'не определена';
+    document.getElementById('llm-facts').textContent = JSON.stringify(llmResult.structural_facts || {}, null, 2);
+    document.getElementById('llm-contradictions').textContent = (llmResult.contradictions || []).join('; ') || 'не обнаружены';
+    document.getElementById('llm-suspicious').textContent = (llmResult.suspicious_claims || []).join('; ') || 'не обнаружены';
+    
+    var llmContradictions = llmResult.contradictions || [];
+    var llmSuspicious = llmResult.suspicious_claims || [];
+    var llmManipulative = llmResult.manipulative_language || [];
+    
+    llmPenalty = (llmContradictions.length * 0.05) + (llmSuspicious.length * 0.05) + (llmManipulative.length * 0.03);
+    llmPenalty = Math.min(0.30, llmPenalty);
+    
+    if (llmContradictions.length > 0 && !contradictions.found) {
+      contradictions = { found: true, posMarkers: [], negMarkers: [], message: 'LLM обнаружил: ' + llmContradictions.join('; ') };
+      contradictionPenalty = 0.10;
+      document.getElementById('contradiction-box').style.display = 'block';
+      document.getElementById('contradiction-text').textContent = contradictions.message;
+    }
+    
+    if (llmResult.domain && llmResult.domain !== currentDomain && DOMAINS[llmResult.domain]) {
+      switchDomain(llmResult.domain);
+    }
+    
+    logToScreen('✅ Анализ завершён. LLM: ✅', 'success');
+  } else {
+    logToScreen('✅ Анализ завершён (локально). LLM недоступен.', 'info');
+  }
+  
+  document.getElementById('loading').classList.remove('active');
   document.getElementById('res').style.display = 'none';
   document.getElementById('llm-result').style.display = 'none';
-  document.getElementById('sim-badge').style.display = 'none';
-  document.getElementById('reset-btn').style.display = 'none';
-  document.getElementById('sc').classList.remove('simulated', 'penalty');
   document.getElementById('penalty-badge').style.display = 'none';
+  
+  runEvaluate();
 }
 
 // ============================================
@@ -898,13 +728,26 @@ function analyzeText() {
 function runEvaluate() {
   var dom = DOMAINS[currentDomain];
   var sc = calculateNonlinearScore(vals, dom.weights);
-  var totalPenalty = hallucinationPenalty + contradictionPenalty + fluffPenalty;
+  var totalPenalty = hallucinationPenalty + contradictionPenalty + fluffPenalty + llmPenalty;
   if (totalPenalty > 0) { sc = sc * (1 - totalPenalty); sc = Math.max(0.1, sc); }
   
   var bestScore = -1, best = null, bestMetrics = null;
   for (var j = 0; j < dom.archetypes.length; j++) {
     var metrics = combinedScore(vals, dom.archetypes[j].pattern, dom.weights);
     if (metrics.combined > bestScore) { bestScore = metrics.combined; best = dom.archetypes[j]; bestMetrics = metrics; }
+  }
+  
+  if (llmResult && llmResult.archetype_hint) {
+    var hint = llmResult.archetype_hint.toLowerCase();
+    if (hint.includes('мошенник') || hint.includes('fraud')) {
+      for (var j = 0; j < dom.archetypes.length; j++) {
+        if (dom.archetypes[j].name.includes('Мошенник')) { best = dom.archetypes[j]; bestMetrics = combinedScore(vals, best.pattern, dom.weights); break; }
+      }
+    } else if (hint.includes('гуру') || hint.includes('guru')) {
+      for (var j = 0; j < dom.archetypes.length; j++) {
+        if (dom.archetypes[j].name.includes('Гуру')) { best = dom.archetypes[j]; bestMetrics = combinedScore(vals, best.pattern, dom.weights); break; }
+      }
+    }
   }
   
   if (hallucinations.length >= 2 && sc < 0.4) {
@@ -928,18 +771,21 @@ function runEvaluate() {
   document.getElementById('res').style.display = 'block';
   document.getElementById('llm-result').style.display = 'none';
   
+  if (sc >= 0.7 && hallucinations.length === 0) document.getElementById('sc').classList.add('good');
+  else document.getElementById('sc').classList.remove('good');
+  
   document.getElementById('metric-confidence').textContent = 'Уверенность: ' + (bestMetrics.combined * 100).toFixed(1) + '%';
   document.getElementById('metric-textlen').textContent = 'Длина текста: ' + textLength + ' символов';
   document.getElementById('metric-unique').textContent = 'Уникальных маркеров: ' + uniqueMarkers;
-  var fluffLevel = fluffMarkers.length === 0 ? 'Низкий' : (fluffMarkers.length < 3 ? 'Средний' : 'Высокий');
-  document.getElementById('metric-fluff').textContent = 'Уровень "воды": ' + fluffLevel;
+  document.getElementById('metric-llm').textContent = 'LLM-анализ: ' + (llmResult ? '✅ выполнен' : '⚠️ недоступен');
   
   if (totalPenalty > 0) {
-    var penaltyText = '⚠️ Штрафы: ';
+    var penaltyText = '️ Штрафы: ';
     var parts = [];
-    if (hallucinationPenalty > 0) parts.push('-' + (hallucinationPenalty * 100).toFixed(0) + '% за выдумки (' + hallucinations.length + ' марк.)');
+    if (hallucinationPenalty > 0) parts.push('-' + (hallucinationPenalty * 100).toFixed(0) + '% за выдумки');
     if (contradictionPenalty > 0) parts.push('-10% за противоречия');
     if (fluffPenalty > 0) parts.push('-' + (fluffPenalty * 100).toFixed(0) + '% за "воду"');
+    if (llmPenalty > 0) parts.push('-' + (llmPenalty * 100).toFixed(0) + '% от LLM');
     document.getElementById('penalty-badge').textContent = penaltyText + parts.join(', ');
     document.getElementById('penalty-badge').style.display = 'block';
     document.getElementById('sc').classList.add('penalty');
@@ -948,21 +794,9 @@ function runEvaluate() {
     document.getElementById('sc').classList.remove('penalty');
   }
   
-  if (isSimulation) {
-    document.getElementById('sim-badge').style.display = 'block';
-    document.getElementById('reset-btn').style.display = 'block';
-    document.getElementById('sc').classList.add('simulated');
-  } else {
-    document.getElementById('sim-badge').style.display = 'none';
-    document.getElementById('reset-btn').style.display = 'none';
-    document.getElementById('sc').classList.remove('simulated');
-  }
   document.getElementById('res').scrollIntoView({behavior: 'smooth'});
 }
 
-// ============================================
-// ЛОКАЛЬНЫЙ АНАЛИЗ
-// ============================================
 function getLocalAnalysis() {
   var dom = DOMAINS[currentDomain];
   var sc = parseFloat(document.getElementById('sc').textContent);
@@ -971,53 +805,56 @@ function getLocalAnalysis() {
   var sorted = [];
   for (var i = 0; i < CRITERIA.length; i++) { sorted.push({name: CRITERIA[i].n, val: vals[i], w: dom.weights[i], desc: dom.descriptions[i]}); }
   sorted.sort(function(a, b) { return a.val - b.val; });
-  var weakest = sorted[0], secondWeak = sorted[1];
-  var text = '📊 СОСТОЯНИЕ СИСТЕМЫ (v8.5)\n━━━━━━━━━━━━━━━━━━━━━\n';
+  var weakest = sorted[0];
+  var text = '📊 СОСТОЯНИЕ СИСТЕМЫ (v9.2)\n━━━━━━━━━━━━━━━━━━━━━\n';
   text += 'Сфера: ' + dom.name + '\nОбщий балл: ' + sc.toFixed(2) + ' из 1.00\n';
   text += 'Длина текста: ' + textLength + ' символов\n';
-  text += 'Уникальных маркеров: ' + uniqueMarkers + '\n\n';
+  text += 'Уникальных маркеров: ' + uniqueMarkers + '\n';
+  text += 'LLM-анализ: ' + (llmResult ? '✅ выполнен' : '️ недоступен') + '\n\n';
   text += 'Архетип: ' + archName + ' (Уверенность: ' + (lastConfidence.combined * 100).toFixed(1) + '%)\n' + archDesc + '\n\n';
-  text += '⚠️ ГЛАВНЫЕ УЯЗВИМОСТИ\n━━━━━━━━━━━━━━━━━━━━━\n';
+  text += '️ ГЛАВНЫЕ УЯЗВИМОСТИ\n━━━━━━━━━━━━━━━━━━━━━\n';
   if (sc < 0.4 || weakest.val < 0.5) {
     text += '1. ' + weakest.name + ' (оценка: ' + weakest.val.toFixed(2) + ')\n';
-    text += '   Описание: ' + weakest.desc + '\n   Вес фактора: ' + weakest.w + ' — ';
-    if (weakest.w >= 0.15) text += 'ВЫСОКИЙ, это критично!\n';
-    else if (weakest.w >= 0.10) text += 'средний, требует внимания.\n';
-    else text += 'низкий, но влияет.\n';
-    text += '   Потеря потенциала: ' + ((1 - weakest.val) * weakest.w * 100).toFixed(1) + '%\n\n';
-    if (secondWeak.val < 0.5 && secondWeak.name !== weakest.name) {
-      text += '2. ' + secondWeak.name + ' (оценка: ' + secondWeak.val.toFixed(2) + ')\n';
-      text += '   Описание: ' + secondWeak.desc + '\n   Усиливает первую проблему.\n\n';
-    }
-  } else { text += 'Критических уязвимостей нет. Все параметры выше 0.5.\n\n'; }
+    text += '   Описание: ' + weakest.desc + '\n   Вес: ' + weakest.w + '\n\n';
+  } else { text += '✅ Критических уязвимостей нет.\n\n'; }
   text += '💡 КОНКРЕТНЫЕ ШАГИ\n━━━━━━━━━━━━━━━━━━━━━\n';
   text += '📌 По архетипу (' + archName + '):\n' + (dom.archRecs[archName] || dom.archRecs['Переходное состояние']) + '\n\n';
-  if (hallucinations.length > 0) text += '🚫 Найдено ' + hallucinations.length + ' галлюцинаций. Проверьте факты.\n';
-  if (contradictions.found) text += '🔀 Обнаружены логические противоречия.\n';
-  if (fluffMarkers.length > 0) text += '💨 Высокий уровень "воды". Будьте конкретнее.\n';
+  if (hallucinations.length > 0) text += '🚫 Найдено ' + hallucinations.length + ' галлюцинаций.\n';
+  if (contradictions.found) text += '🔀 Обнаружены противоречия.\n';
+  if (llmResult && llmResult.suspicious_claims && llmResult.suspicious_claims.length > 0) {
+    text += '🧠 LLM нашёл подозрительные утверждения:\n';
+    llmResult.suspicious_claims.forEach(function(c) { text += '   - ' + c + '\n'; });
+  }
   return text;
 }
 
-// ============================================
-// ПОЛУЧИТЬ РАЗБОР
-// ============================================
 function getAnalysis() {
-  var status = document.getElementById('llm-status');
   var btn = event.target;
   btn.disabled = true;
-  status.textContent = '⚡ Генерирую локальный разбор...';
   setTimeout(function() {
     document.getElementById('llm-text').textContent = getLocalAnalysis();
     document.getElementById('llm-result').style.display = 'block';
-    status.textContent = '✅ Локальный анализ готов!';
     btn.disabled = false;
     document.getElementById('llm-result').scrollIntoView({behavior: 'smooth'});
   }, 400);
 }
 
+// ============================================
+// ДАННЫЕ ПО СФЕРАМ
+// ============================================
+var DOMAINS = {
+  health: { name: "🏥 Здоровье", weights: [0.10, 0.15, 0.08, 0.20, 0.05, 0.05, 0.10, 0.12, 0.10, 0.05], descriptions: ["Режим","Поддержка","Экономия сил","Устойчивость","Простота","Отслеживание","Прогресс","Баланс","Комфорт","Перспектива"], keywords: [{pos:["сон","режим","распорядок","регулярн","стабильн","спокойн","ложусь","просыпаюсь","ритм","циркадн","мелатонин"],neg:["бессонниц","хаос","нет режим","сбивает","по 5 часов","недосып","не сплю","проспал","ночью"]},{pos:["друзья","семья","поддержк","вместе","сообщество","тренер","напарник","компаньон","благодар","ценю","признателен","делюсь опытом","помогаю другим","учу других"],neg:["один","изолирован","никто не поддерж","сам","без помощ","никому не нуж"]},{pos:["легк","просто","по силам","без перегруз","постепенн","нетороплив"],neg:["тяжело","на износ","усталост","перегруз","5 раз в недел","жестк","выжимаю"]},{pos:["план б","гибк","без фанатизм","разрешил себе","постепенн","подушк","запас","резерв","стал сильнее после","вырос после кризиса","барбелл"],neg:["все или ничего","сорвалс","бросил","жестк правил","жестк","с понедельника","опять срыв","не выдержал","боюсь перемен"]},{pos:["простые шаг","маленьк","по чуть-чуть","простое","немного"],neg:["сложн систем","много правил","идеальн план","сразу всё","максимум"]},{pos:["чекап","анализы","дневник","замеры","слежу","изучил","отслеж","контрол","вижу возможност","открыт новому","обратная связь","петля обратной связи"],neg:["не знаю","игнорирую","нет данных","не понимаю","вслепую"]},{pos:["улучшаетс","прогресс","становитс легче","адаптируюс","развиваюсь","лучше","радуюсь малому","ценю момент"],neg:["стоит на месте","деградац","топчусь","бросил","нет результата"]},{pos:["тело и разум в согласии","нет внутренней борьб","принятие","спокойн","гармон"],neg:["борьба с собой","ненавиж","заставляю","давят","насиловал себя"]},{pos:["комфортн","без боли","удовольств","забота о себе","здоров","хорошо себя чувств","рад возможностям","ценю то что есть","записываю хорошее"],neg:["боль","страдан","насилие над собой","вредн привычк","травм","травмировал","простуд","заболел","плохо"]},{pos:["на годы","долгосрочн","устойчиво","план","перспектив","буфер","резерв"],neg:["быстрый результат","здесь и сейчас","за месяц","с понедельника","хочу сразу"]}], archetypes: [{name:"Хрупкий Энтузиаст",desc:"Много знаний и резких стартов, но высокий риск срыва.",pattern:[0.3,0.3,0.3,0.1,0.5,0.5,0.3,0.2,0.2,0.3]},{name:"Устойчивая Привычка",desc:"Медленный, но верный прогресс через простые действия.",pattern:[0.7,0.7,0.7,0.8,0.8,0.6,0.7,0.8,0.7,0.6]},{name:"Истощение",desc:"Система работает на последних ресурсах.",pattern:[0.2,0.3,0.2,0.2,0.4,0.3,0.2,0.3,0.1,0.2]},{name:"Переходное состояние",desc:"Система в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Вы создаёте условия для синхронизации с возможностями.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:" Гиперактивный",desc:"Много активности, но нет системы.",pattern:[0.3,0.4,0.2,0.3,0.4,0.5,0.6,0.4,0.3,0.4]},{name:"🧘 Осознанный Минималист",desc:"Мало действий, но все в точку.",pattern:[0.8,0.6,0.8,0.7,0.9,0.7,0.6,0.7,0.8,0.7]}], archRecs: {"Хрупкий Энтузиаст": "Архетип говорит: вы в режиме 'всё или ничего'. Уберите жесткие правила.", "Устойчивая Привычка": "Архетип говорит: вы на правильном пути.", "Истощение": "Архетип говорит: НЕМЕДЛЕННО сократите нагрузку на 50%.", "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ самом слабом критерии.", "🍀 Архитектор Удачи": "Архетип говорит: вы мастер 'серфинга возможностей'.", "🏃 Гиперактивный": "Архетип говорит: выберите 1 привычку и делайте её 30 дней.", " Осознанный Минималист": "Архетип говорит: вы нашли свой ритм."}, critAdvice: {"Антихрупкость": "создайте план Б на случай срыва.", "Гомеостаз": "восстановите режим сна.", "Симбиоз": "найдите напарника или сообщество.", "Мин.страд.": "уберите главный источник стресса.", "Энергоэф.": "оптимизируйте рутину.", "Кооперация": "прекратите внутреннюю борьбу.", "Эвоц.потенц": "введите маленькие эксперименты.", "Поток инфо": "начните вести дневник.", "Простота": "упростите систему.", "Будущ.возм.": "запишите 1 долгосрочную цель."} },
+  business: { name: "💼 Бизнес", weights: [0.16, 0.07, 0.05, 0.18, 0.19, 0.07, 0.03, 0.11, 0.13, 0.01], descriptions: ["Стабильность","Связи","Эффективность","Устойчивость","Простота","Метрики","Рост","Команда","Условия","Стратегия"], keywords: [{pos:["стабильн","регулярн","предсказуем","постоянн","баланс","ровн"],neg:["нестабильн","скачет","то густо то пусто","хаос","рваный","провалы","качели"]},{pos:["клиент","партнёр","партнер","сообщество","нетворк","сарафан","база","аудитория","связи","благодар","ценю","признателен","делюсь опытом","помогаю коллегам","учу других","win-win","взаимовыгодно"],neg:["мало клиент","один клиент","нет партнёр","изолирован","завишу от одного","без клиент","нет клиент","нет клиентов","клиентов мало"]},{pos:["эффектив","оптимиз","автоматиз","быстро","просто","систем","ускор"],neg:["медленно","рутин","бюрократ","траты","лишнее","дублирован","долго"]},{pos:["подушк","резерв","запас","диверсифик","план б","гибк","адаптир","страховк","барбелл-стратеги","стал сильнее после кризиса"],neg:["нет подушк","без запаса","всё в одном","хрупк","рухнет","банкрот","в минусе","минус","боюсь","кассовый разрыв","нет подушки","боюсь перемен","избегаю рисков"]},{pos:["простот","несколько продукт","ниш","направлен","диверсиф","ясн"],neg:["сложн","моно","завишу от одного","единственный","запутан"]},{pos:["метрики","аналитик","отчёт","отчет","данные","трекинг","прозрачн","пониман","цифры","kpi","вижу возможност","открыт новому","обратная связь","петля обратной связи"],neg:["не знаю","нет данных","вслепую","непонятн","туман","на ощупь"]},{pos:["рост","развит","масштаб","инновац","эксперимент","новый продукт","прогресс","посттравматическ рост"],neg:["застой","стагнац","топчемся","устарел","не меняем","стоим"]},{pos:["команд","совместн","слажен","координац","делегир","вместе","делюсь знаниями"],neg:["один тащу","всё на мне","нет команд","саботаж","разобщен","сам","тащу всё"]},{pos:["комфорт","баланс жизнь","отдых","удовольств","нормальн график","рад возможностям","радуюсь малому"],neg:["выгорел","выгораю","12 часов","16 часов","без выходн","на износ","стресс","пашу"]},{pos:["стратеги","долгосрочн","перспектив","видени","roadmap","план на год","цель","буфер","запас прочности"],neg:["без план","сиюминутн","только сейчас","импульсивн","реактивн"]}], archetypes: [{name:"Хрупкий Рост",desc:"Быстро развивается, но может рухнуть от первого кризиса.",pattern:[0.3,0.4,0.5,0.2,0.5,0.6,0.8,0.5,0.4,0.5]},{name:"Стабильный Застой",desc:"Надёжен, но не адаптируется к новому.",pattern:[0.8,0.7,0.6,0.6,0.7,0.5,0.3,0.6,0.5,0.5]},{name:"Кризис",desc:"Система на грани выживания.",pattern:[0.2,0.3,0.4,0.3,0.5,0.4,0.3,0.3,0.2,0.3]},{name:"Переходное состояние",desc:"Бизнес в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Вы создаёте условия для синхронизации с возможностями.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:" Фейковый Гуру",desc:"Много красивых слов и выдуманных фактов.",pattern:[0.3,0.3,0.3,0.2,0.4,0.3,0.5,0.3,0.2,0.4]},{name:"🦄 Единорог",desc:"Высокий рост, сильная команда.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.9,0.8,0.7,0.8]},{name:"🐢 Медленный Стартап",desc:"Медленный рост, но крепкий фундамент.",pattern:[0.7,0.5,0.6,0.7,0.7,0.6,0.5,0.6,0.6,0.7]}], archRecs: {"Хрупкий Рост": "Архетип говорит: вы растёте, но фундамент хрупкий.", "Стабильный Застой": "Архетип говорит: вы надёжны, но рискуете устареть.", "Кризис": "Архетип говорит: НЕМЕДЛЕННО сократите расходы.", "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ самом слабом критерии.", "🍀 Архитектор Удачи": "Архетип говорит: вы мастер 'серфинга возможностей'.", " Фейковый Гуру": "Архетип говорит: снимите розовые очки.", " Единорог": "Архетип говорит: не расслабляйтесь.", " Медленный Стартап": "Архетип говорит: не торопитесь."}, critAdvice: {"Антихрупкость": "создайте финансовую подушку на 3-6 месяцев.", "Гомеостаз": "стабилизируйте денежный поток.", "Симбиоз": "найдите 2-3 надёжных партнёров.", "Мин.страд.": "снизьте нагрузку. Делегируйте рутину.", "Энергоэф.": "автоматизируйте повторяющиеся процессы.", "Кооперация": "соберите команду или найдите партнёра.", "Эвоц.потенц": "запустите 1 эксперимент в месяц.", "Поток инфо": "внедрите метрики: выручка, конверсия, LTV.", "Простота": "упростите продуктовую линейку.", "Будущ.возм.": "напишите стратегию на 1 год."} },
+  code: { name: "💻 Код", weights: [0.08, 0.10, 0.12, 0.22, 0.08, 0.15, 0.10, 0.10, 0.05, 0.05], descriptions: ["Стабильность","Интеграции","Производительность","Устойчивость","Простота","Документация","Развиваемость","Команда","Удобство","Поддержка"], keywords: [{pos:["стабильн","работает","uptime","надёжн","без сбоев","стабильно"],neg:["падает","баги","краши","нестабильн","ломаетс","продакшен падает","упал","сбой"]},{pos:["api","интеграц","зависимост","библиотек","модуль","связи","благодар","ценю вклад","делюсь знаниями","помогаю коллегам"],neg:["монолит","всё связано","нельзя разделить","спагетти"]},{pos:["быстро","оптимиз","производит","кеширован","эффектив","летает"],neg:["медленно","тормозит","долгий запрос","деплой 2 часа","тяжело","виснет"]},{pos:["тесты","покрытие","ci/cd","автотест","rollback","фича флаг","автоматиз","барбелл","стал сильнее после инцидента"],neg:["нет тестов","боимся трогать","легаси","legacy","ручной деплой","один знает","bus factor","тестов нет","покрытия нет","боюсь перемен"]},{pos:["микросервис","модульн","разделен","чистая архитектура","soli","разделён","простот"],neg:["монолит","100к строк","спагетти","бог класс","god object","лапша","сложн"]},{pos:["документ","readme","логи","мониторинг","прозрачн","понятно","комментарии","вижу возможност","обратная связь","петля обратной связи"],neg:["нет документ","устарела","никто не знает","тёмный лес","без описания","документации нет"]},{pos:["рефактор","улучшаем","обновляем","новый стек","эксперимент","развиваем","посттравматическ рост"],neg:["не трогай работает","устарело","legacy","боимся менять","застой"]},{pos:["команд","code review","pair programming","совместн","вместе","парно","делюсь опытом"],neg:["один знает всё","bus factor 1","нет ревью","разобщены","тащу один"]},{pos:["удобно","dx приятн","быстрая сборка","хороший инструментарий","комфортн","рад возможностям","радуюсь малому"],neg:["мучаемс","долгая сборка","плохой dx","раздражает","боль"]},{pos:["поддерживаем","долгосрочн","масштабируем","будущее","устойчиво","буфер","запас прочности"],neg:["костыль","временное решение","технический долг","костыли","хак"]}], archetypes: [{name:"Хрупкий Монолит",desc:"Работает, но любое изменение ломает систему.",pattern:[0.4,0.3,0.3,0.1,0.2,0.3,0.2,0.4,0.3,0.3]},{name:"Чистая Архитектура",desc:"Модульный, тестируемый, масштабируемый код.",pattern:[0.8,0.7,0.8,0.8,0.8,0.8,0.8,0.7,0.8,0.7]},{name:"Легаси-ад",desc:"Старый код, никто не хочет трогать.",pattern:[0.3,0.2,0.2,0.2,0.2,0.2,0.1,0.3,0.2,0.2]},{name:"Переходное состояние",desc:"Кодовая база в процессе рефакторинга.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:" Архитектор Удачи",desc:"Код готов к любым изменениям.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:"🔥 Горящий Продакшен",desc:"Всё падает, все в панике.",pattern:[0.2,0.3,0.2,0.1,0.2,0.2,0.2,0.3,0.1,0.2]}], archRecs: {"Хрупкий Монолит": "Архетип говорит: начните с тестов на критичные пути.", "Чистая Архитектура": "Архетип говорит: поддерживайте качество через code review.", "Легаси-ад": "Архетип говорит: оберните ключевые модули в тесты.", "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ слабом критерии.", " Архитектор Удачи": "Архетип говорит: продолжайте инвестировать в тесты.", "🔥 Горящий Продакшен": "Архетип говорит: СТОП новые фичи. Сначала стабилизация."}, critAdvice: {"Антихрупкость": "внедрите автотесты и CI/CD.", "Гомеостаз": "внедрите мониторинг и алерты.", "Симбиоз": "чёткие API-контракты и версионирование.", "Мин.страд.": "улучшите DX: быстрая сборка.", "Энергоэф.": "оптимизируйте медленные места.", "Кооперация": "внедрите code review.", "Эвоц.потенц": "20% времени на рефакторинг.", "Поток инфо": "напишите README.", "Простота": "упростите архитектуру.", "Будущ.возм.": "составьте план миграции."} },
+  relations: { name: "❤️ Отношения", weights: [0.15, 0.20, 0.08, 0.12, 0.10, 0.15, 0.08, 0.18, 0.12, 0.07], descriptions: ["Баланс","Глубина","Эффективность","Устойчивость","Разнообразие","Открытость","Развитие","Слаженность","Комфорт","Будущее"], keywords: [{pos:["баланс","стабильн","спокойн","гармон","предсказуем","ровно"],neg:["качели","нестабильн","эмоциональные качели","хаос","нервно","штормит"]},{pos:["близость","связь","вместе","общее","партнёр","партнер","доверие","пониман","родной","благодар","ценю","признателен","делюсь чувствами","помогаю партнёру","win-win","взаимовыгодно"],neg:["отдаляемс","чужие","по душам не говорим","разные жизни","соседи","холод","отстран"]},{pos:["говорим","слушаем","слышим","понимаем","договариваемс","диалог"],neg:["не слышит","не понимает","кричим","молчим","не общаемс","игнор","замолкаем"]},{pos:["пережили","справились","гибк","адаптир","прощаем","миримс","договорились","стал сильнее после кризиса","барбелл"],neg:["ссоримс","конфликт","не прощаем","копим обиды","разрушаем","скандал","боюсь перемен"]},{pos:["разнообраз","интересы","путешествия","новое вместе","хобби","приключения"],neg:["однообразно","скучно","только быт","день сурка","рутина"]},{pos:["открыт","честн","говорим о чувствах","прозрачн","доверяем","искренн","вижу возможност","обратная связь","петля обратной связи"],neg:["скрываем","не договариваем","тайны","недоверие","манипуляц","недосказанн"]},{pos:["растём","развиваемс","учимс","меняемся к лучшему","новый опыт","эволюционируем","посттравматическ рост","радуюсь малому"],neg:["топчемс","не меняемс","застой","как раньше","деградируем"]},{pos:["вместе","команда","общая цель","совместн","поддерживаем","партнёрство","делюсь опытом"],neg:["каждый сам","разные цели","тянем в разные стороны","саботаж","противостоим"]},{pos:["комфорт","безопасн","тепло","принятие","радость","удовольств","хорошо вместе","рад тому что есть","ценю момент","записываю хорошее"],neg:["боль","страх","токсичн","абьюз","насилие","манипуляц","холод","тяжело"]},{pos:["будущее","планы","общая цель","семья","дети","долгосрочн","видим вместе","буфер","запас прочности"],neg:["не видим будущего","разные планы","временн","без перспектив","тупик"]}], archetypes: [{name:"Токсичная Зависимость",desc:"Много страданий, мало роста.",pattern:[0.2,0.3,0.3,0.2,0.4,0.3,0.2,0.3,0.1,0.2]},{name:"Растущая Связь",desc:"Есть проблемы, но оба работают.",pattern:[0.6,0.7,0.6,0.7,0.6,0.7,0.7,0.7,0.6,0.7]},{name:"Стабильное Партнёрство",desc:"Зрелые, устойчивые отношения.",pattern:[0.8,0.8,0.7,0.8,0.7,0.8,0.7,0.8,0.8,0.8]},{name:"Переходное состояние",desc:"Отношения в процессе трансформации.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Синергия и глубокая связь.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:" Разрыв",desc:"Отношения на грани расставания.",pattern:[0.2,0.2,0.2,0.2,0.3,0.2,0.2,0.2,0.1,0.2]}], archRecs: {"Токсичная Зависимость": "Архетип говорит: установите границы.", "Растущая Связь": "Архетип говорит: продолжайте инвестировать в общение.", "Стабильное Партнёрство": "Архетип говорит: поддерживайте баланс.", "Переходное состояние": "Архетип говорит: сфокусируйтесь на одном слабом критерии.", "🍀 Архитектор Удачи": "Архетип говорит: продолжайте инвестировать в связь.", "💔 Разрыв": "Архетип говорит: честно поговорите о будущем."}, critAdvice: {"Антихрупкость": "проходите конфликты конструктивно.", "Гомеостаз": "найдите источник стабильности.", "Симбиоз": "раз в неделю — разговор по душам.", "Мин.страд.": "уберите главный источник боли.", "Энергоэф.": "меньше намёков, больше прямых просьб.", "Кооперация": "найдите общую цель.", "Эвоц.потенц": "внесите новизну.", "Поток инфо": "говорите о чувствах напрямую.", "Простота": "упростите ожидания.", "Будущ.возм.": "обсудите общее будущее."} },
+  finance: { name: "💰 Финансы", weights: [0.15, 0.08, 0.10, 0.20, 0.12, 0.10, 0.08, 0.05, 0.07, 0.05], descriptions: ["Доход","Диверсификация","Бюджет","Подушка","Управление","Грамотность","Рост","Семья","Долги","Планирование"], keywords: [{pos:["стабильн","регулярн","предсказуем","постоянн","зарплат","оклад"],neg:["нестабильн","скачет","то густо то пусто","хаос","нет доход","безработиц","увольнен"]},{pos:["диверсифик","несколько источник","акци","облигац","недвижимост","вклад","разн актив","барбелл-стратеги"],neg:["всё в одном","один источник","только зарплат","только крипта","только акци"]},{pos:["бюджет","учет","эконом","откладываю","коплю","планирую расход"],neg:["трачу всё","не считаю","импульсивн","спонтанн","живу от зарплаты до зарплаты"]},{pos:["подушк","резерв","запас","на черный день","3 месяца","6 месяцев","безопасн","стал сильнее после кризиса","буфер"],neg:["нет подушк","без запаса","всё в долг","кредит","микрозайм","должен","боюсь перемен"]},{pos:["простот","автоматиз","автоплатеж","упростил","понятн","прозрачн"],neg:["сложн","запутан","много счет","не понимаю","где деньги"]},{pos:["грамотн","изучил","читаю","курсы","финансов","инвест","пониман","обратная связь","петля обратной связи","делюсь знаниями"],neg:["не разбираюсь","не понимаю","страх","боюсь","не знаю"]},{pos:["растет","доходность","прибыль","увеличиваетс","капитал","процент","посттравматическ рост"],neg:["падает","убыток","теряю","минус","в просадке","обесцениваетс"]},{pos:["семь","совместн","общий бюджет","договорились","вместе","партнер","win-win","взаимовыгодно"],neg:["ссоримс из-за денег","скрываем","тайн","обман","раздельн"]},{pos:["без долг","закрыл кредит","свободн","чист","нет обязательст","радуюсь малому","ценю момент"],neg:["долг","кредит","ипотек","займ","должен","просрочк","коллектор"]},{pos:["пенсия","долгосрочн","на годы","стратеги","цель","план","будущее","буфер","запас прочности"],neg:["не думаю","живу одним днем","без план","сиюминутн"]}], archetypes: [{name:"Финансовый Хаос",desc:"Деньги приходят и уходят, контроля нет.",pattern:[0.2,0.2,0.2,0.1,0.3,0.2,0.2,0.3,0.1,0.2]},{name:"Осторожный Накопитель",desc:"Стабильно копит, но боится инвестировать.",pattern:[0.7,0.3,0.8,0.7,0.6,0.5,0.2,0.6,0.8,0.5]},{name:"Сбалансированный Инвестор",desc:"Диверсификация, подушка, рост капитала.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.7,0.7,0.8,0.8]},{name:"Переходное состояние",desc:"Финансы в процессе упорядочивания.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:" Архитектор Удачи",desc:"Финансовая свобода.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.8,0.7,0.8,0.8]},{name:"💳 Долговая Яма",desc:"Много долгов, нет стратегии выхода.",pattern:[0.3,0.2,0.3,0.2,0.4,0.3,0.2,0.3,0.1,0.3]}], archRecs: {"Финансовый Хаос": "Архетип говорит: НЕМЕДЛЕННО прекратите брать новые долги.", "Осторожный Накопитель": "Архетип говорит: изучите облигации и вклады.", "Сбалансированный Инвестор": "Архетип говорит: продолжайте ребалансировку.", "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ критерии.", "🍀 Архитектор Удачи": "Архетип говорит: вы достигли финансовой зрелости.", "💳 Долговая Яма": "Архетип говорит: метод снежного кома."}, critAdvice: {"Антихрупкость": "создайте подушку на 3-6 месяцев.", "Гомеостаз": "стабилизируйте доход.", "Симбиоз": "диверсифицируйте источники дохода.", "Мин.страд.": "закройте самые дорогие долги.", "Энергоэф.": "автоматизируйте финансы.", "Кооперация": "обсудите бюджет с семьёй.", "Эвоц.потенц": "изучите 1 новый инструмент в месяц.", "Поток инфо": "ведите учет расходов.", "Простота": "упростите количество счетов.", "Будущ.возм.": "определите цель."} },
+  science: { name: "🎓 Наука и Образование", weights: [0.12, 0.10, 0.08, 0.15, 0.10, 0.18, 0.12, 0.10, 0.08, 0.07], descriptions: ["Стабильность","Сообщество","Обучение","Критика","Простота","Данные","Прогресс","Коллаборации","Комфорт","Влияние"], keywords: [{pos:["стабильн","регулярн","постоянн","систематичн","последоват","диссертаци","аспирант","дипломн","научный руководитель","квантов","физик","КПД","подход","публикац","исследован","эксперимент","гипотез","метод","анализ","стать","рецензи","цитиру","импакт","индекс хирш","кафедр","институт","академи","профессор","лаборатор","университет","конференц","доклад","выступлен","теломер","эпигенетич","сайленсинг","омоложен","клиник","пациент","биологич","генетич","молекулярн","клеточн","нейрон","синапс","фермент","белок","ДНК","РНК","CRISPR","ген","дудн","шарпантье","cell","nature","science"],neg:["хаос","беспорядок","нет систем","случайн","рваный график"]},{pos:["коллеги","сообщество","конференц","нетворк","научная группа","лаборатория","университет","благодар","ценю","делюсь знаниями","кафедра","институт","академи","профессор"],neg:["один работаю","изолирован","нет коллег","игнорируют","не признают"]},{pos:["эффектив","быстро усваиваю","оптимиз","понимаю","усвоил","освоил"],neg:["не понимаю","застрял","топчусь","не могу усвоить","туплю"]},{pos:["критика","рецензирование","peer review","гибк","адаптир","принял критику","стал сильнее"],neg:["боюсь критик","игнорирую рецензии","не принимаю","обижаюсь","отклонил без чтения"]},{pos:["простот","ясн","понятн","доступн","упростил","объяснил"],neg:["сложн","запутан","непонятн","перегружен терминами","вода"]},{pos:["данные","метрики","статистик","открыт","прозрачн","воспроизводим","репликац","open data","open science"],neg:["нет данных","скрываю","не публикую","закрыто","недоступно","не воспроизводитс"]},{pos:["прогресс","развит","новое открыти","публикац","статья","цитирован","импакт","рост","эволюционирую"],neg:["застой","нет публикац","отказы","стагнац","топчусь"]},{pos:["совместн","коллаборац","вместе","партнёр","междисциплинарн","win-win","взаимовыгодно"],neg:["один тащу","конкуренц","саботаж","не делюсь","скрываю данные"]},{pos:["комфорт","баланс","радуюсь малому","ценю момент","удовлетворен","интересн"],neg:["выгорел","выгораю","стресс","давят","токсичн","абьюз","на износ"]},{pos:["долгосрочн","вклад","наследие","будущее","влияние","цитируют","план","стратеги","буфер"],neg:["сиюминутн","без план","только сейчас","нет перспектив"]}], archetypes: [{name:"Честный Исследователь",desc:"Строгий метод, прозрачные данные.",pattern:[0.7,0.7,0.7,0.8,0.7,0.8,0.7,0.7,0.7,0.7]},{name:"Академический Мошенник",desc:"Красивые слова, выдуманные данные.",pattern:[0.3,0.3,0.4,0.2,0.3,0.2,0.5,0.3,0.3,0.3]},{name:"Вечный Студент",desc:"Много учится, но мало публикует.",pattern:[0.5,0.4,0.6,0.4,0.5,0.4,0.3,0.4,0.5,0.4]},{name:"Переходное состояние",desc:"Научная карьера в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:" Архитектор Удачи",desc:"Создаёт условия для научных прорывов.",pattern:[0.6, 0.8, 0.6, 0.7, 0.6, 0.8, 0.8, 0.7, 0.7, 0.7]},{name:"📚 Изолированный Гений",desc:"Талантлив, но работает один.",pattern:[0.6,0.2,0.7,0.5,0.6,0.6,0.7,0.2,0.5,0.6]}], archRecs: {"Честный Исследователь": "Архетип говорит: продолжайте открытую науку и менторство.", "Академический Мошенник": "Архетип говорит: хватит выдумывать. Вернитесь к честным данным.", "Вечный Студент": "Архетип говорит: напишите и опубликуйте хотя бы одну статью.", "Переходное состояние": "Архетип говорит: сфокусируйтесь на ОДНОМ самом слабом критерии.", "🍀 Архитектор Удачи": "Архетип говорит: продолжайте открывать данные и строить коллаборации.", " Изолированный Гений": "Архетип говорит: найдите коллаборатора."}, critAdvice: {"Антихрупкость": "принимайте критику как подарок.", "Гомеостаз": "выстройте стабильный график исследований.", "Симбиоз": "найдите научного наставника или коллаборатора.", "Мин.страд.": "снизьте академическое давление.", "Энергоэф.": "оптимизируйте процесс чтения статей.", "Кооперация": "начните делиться препринтами и данными.", "Эвоц.потенц": "изучите 1 новый метод в месяц.", "Поток инфо": "ведите открытый лабораторный журнал.", "Простота": "упростите изложение.", "Будущ.возм.": "определите долгосрочную научную цель."} }
+};
+
 // Инициализация
 switchDomain('health');
 updateCharCount();
+updateLLMBadge();
 </script>
 </body>
 </html>
