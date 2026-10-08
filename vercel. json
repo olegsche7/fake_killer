@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/api/proxy", "destination": "/api/proxy.js" },
+    { "source": "/api/mine", "destination": "/api/mine.js" },
+    { "source": "/api/patterns", "destination": "/api/patterns.js" },
+    { "source": "/api/patterns-add", "destination": "/api/patterns-add.js" }
+  ]
+}
