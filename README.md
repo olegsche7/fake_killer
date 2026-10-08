@@ -148,3 +148,4 @@ For commercial embedding in closed products — contact me.
 
 **Author:** [olegsche7](https://github.com/olegsche7)  
 **Live Demo:** [Hugging Face Spaces](https://huggingface.co/spaces/OlegSche83/pattern_ai)
+# Redeploy test
