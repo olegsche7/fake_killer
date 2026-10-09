@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pattern AI v14.1</title>
+<title>Pattern AI v14.2 Cloud</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -127,10 +127,10 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
 </style>
 </head>
 <body>
-<h1>Pattern AI <span class="version-badge">v14.1</span></h1>
+<h1>Pattern AI <span class="version-badge">v14.2 Cloud</span></h1>
 
 <div class="api-settings">
-  <h4 onclick="toggleApiSettings()">️ Настройки</h4>
+  <h4 onclick="toggleApiSettings()">⚙️ Настройки</h4>
   <div id="api-settings-content" class="hidden">
     <div class="api-input-group">
       <label>🔗</label>
@@ -152,7 +152,7 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
     </div>
     
     <div class="api-input-group" id="groq-key-group">
-      <label></label>
+      <label>🔑</label>
       <input type="password" id="groq-key-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxx" onchange="saveGroqKey()">
     </div>
     <div class="api-status" id="groq-status">Не подключено</div>
@@ -177,8 +177,8 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
 </div>
 
 <div class="mode-switch">
-  <button class="mode-btn active" id="mode-system-btn" onclick="switchMode('system')"> Системы</button>
-  <button class="mode-btn" id="mode-factcheck-btn" onclick="switchMode('factcheck')">🛡️ Фейки</button>
+  <button class="mode-btn active" id="mode-system-btn" onclick="switchMode('system')">🌐 Системы</button>
+  <button class="mode-btn" id="mode-factcheck-btn" onclick="switchMode('factcheck')">️ Фейки</button>
   <button class="mode-btn" id="mode-resume-btn" onclick="switchMode('resume')">👔 Резюме</button>
 </div>
 
@@ -187,14 +187,14 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
 <div class="query-box">
   <div id="resume-fields" class="hidden">
     <div class="api-input-group">
-      <label></label>
+      <label>💼</label>
       <textarea id="job-description" placeholder="Описание вакансии (опционально)..." style="min-height:60px;"></textarea>
     </div>
   </div>
   
   <textarea id="query" maxlength="2000" placeholder="Введите текст для анализа..." oninput="updateCharCount()"></textarea>
   <div class="char-counter" id="char-counter">0 / 2000</div>
-  <button class="btn btn-green" onclick="analyzeText()"> Полный анализ с дебатами</button>
+  <button class="btn btn-green" onclick="analyzeText()">🔍 Полный анализ с дебатами</button>
   <div class="status" id="local-status">Готов к работе</div>
   
   <div id="sliders-container" class="sliders-grid"></div>
@@ -220,7 +220,7 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
     <span class="example-btn fake" onclick="loadExample('quantum_fake')">⚡ Сон</span>
   </div>
   <div class="examples hidden" id="examples-resume">
-    <h4> Примеры</h4>
+    <h4>💼 Примеры</h4>
     <span class="example-btn real" onclick="loadExample('resume_good')">✅ Хорошее</span>
     <span class="example-btn fake" onclick="loadExample('resume_fake')">🎭 Приукрашенное</span>
     <span class="example-btn fake" onclick="loadExample('resume_ai')">🤖 AI-шаблон</span>
@@ -234,7 +234,7 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
 <div class="fluff-box" id="fluff-box"><h3>💨 МАНИПУЛЯЦИЯ</h3><p id="fluff-text"></p></div>
 
 <div class="concreteness-box" id="concreteness-box">
-  <h4>📊 Анализ стиля и доказательной базы</h4>
+  <h4> Анализ стиля и доказательной базы</h4>
   <div id="concreteness-content"></div>
 </div>
 
@@ -251,8 +251,9 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
 
 <div class="memory-box" id="memory-box">
   <h4>💾 Библиотека 
-    <button class="save-btn" onclick="exportPatternsDB()">📥</button>
+    <button class="save-btn" onclick="exportPatternsDB()"></button>
     <button class="save-btn" onclick="document.getElementById('import-file').click()">📤</button>
+    <button class="save-btn" onclick="loadCloudPatternsToMemory()" style="background:rgba(0,210,255,0.2);border-color:#00d2ff;color:#00d2ff;">☁️ Из облака</button>
     <input type="file" id="import-file" style="display:none" accept=".json" onchange="importPatternsDB(this)">
   </h4>
   <div class="memory-section">
@@ -273,9 +274,9 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
 </div>
 
 <div class="debug-box" id="debug-box" style="display:none;">
-  <h4> Лог</h4>
+  <h4>🐞 Лог</h4>
   <div class="debug-log" id="debug-log"></div>
-  <button class="btn btn-orange btn-small" onclick="clearDebugLog()" style="margin-top:10px;">🗑️ Очистить</button>
+  <button class="btn btn-orange btn-small" onclick="clearDebugLog()" style="margin-top:10px;">️ Очистить</button>
 </div>
 
 <div id="pdf-export-wrapper" style="display:none;">
@@ -288,7 +289,7 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
 <div class="result" id="res">
   <div class="score" id="sc">0.00</div>
   <div class="metrics-box">
-    <div><strong> Метрики:</strong></div>
+    <div><strong>📊 Метрики:</strong></div>
     <div id="metric-confidence">Уверенность: -</div>
     <div id="metric-debate">LLM: -</div>
     <div id="metric-textlen">Длина: -</div>
@@ -302,9 +303,9 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
     <div id="arch-desc" style="font-size:13px;color:#ccc"></div>
     <div id="confidence" style="font-size:12px;color:#888;margin-top:5px"></div>
   </div>
-  <button class="btn btn-purple" id="btn-analysis" onclick="getAnalysis()">🤖 Развернутый разбор</button>
-  <button class="btn btn-blue" onclick="exportToPDF()" style="margin-top:10px;">📄 Скачать PDF-отчет</button>
-  <button class="export-btn" id="btn-export" onclick="exportResults()"> Экспорт JSON</button>
+  <button class="btn btn-purple" id="btn-analysis" onclick="getAnalysis()"> Развернутый разбор</button>
+  <button class="btn btn-blue" onclick="exportToPDF()" style="margin-top:10px;"> Скачать PDF-отчет</button>
+  <button class="export-btn" id="btn-export" onclick="exportResults()">📤 Экспорт JSON</button>
   <div class="llm-result" id="llm-result" style="margin-top:15px;padding:15px;background:rgba(156,39,176,0.15);border:1px solid #9c27b0;border-radius:8px;display:none;">
     <h3 style="color:#ce93d8;margin-bottom:8px;">💡 Анализ:</h3>
     <div id="llm-text" style="font-size:14px;line-height:1.6;white-space:pre-wrap;"></div>
@@ -320,6 +321,101 @@ h1 { text-align: center; color: #00d2ff; font-size: 32px; margin-bottom: 5px; te
 </div>
 
 <script>
+// === МОДУЛЬ v14.2: ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ ===
+const CLOUD_API = 'https://fakekiller.vercel.app/api';
+
+function cloudLog(message, type) {
+    type = type || 'info';
+    var timestamp = new Date().toLocaleTimeString();
+    debugLogs.push({time: timestamp, type: type, message: '[Cloud] ' + message});
+    var debugBox = document.getElementById('debug-box');
+    var debugLog = document.getElementById('debug-log');
+    if (debugBox) debugBox.style.display = 'block';
+    if (debugLog) {
+        var logEntry = '<span class="' + type + '">[' + timestamp + '] [Cloud] ' + message + '</span>\n';
+        debugLog.innerHTML += logEntry;
+        debugLog.scrollTop = debugLog.scrollHeight;
+    }
+    console.log('[Cloud Sync] ' + message);
+}
+
+window.loadCloudPatternsToMemory = async function() {
+    cloudLog('📥 Загрузка из облака...', 'info');
+    try {
+        var url = CLOUD_API + '/patterns';
+        if (corsProxy) {
+            url = buildUrl(CLOUD_API + '/patterns');
+        }
+        var response = await fetch(url, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+        });
+        if (response.ok) {
+            var data = await response.json();
+            var count = 0;
+            data.patterns.forEach(p => {
+                if (!abstractPatterns.find(ap => ap.rule === p.rule)) {
+                    abstractPatterns.push(p);
+                    count++;
+                }
+            });
+            localStorage.setItem('pattern_ai_abstract_patterns', JSON.stringify(abstractPatterns));
+            updateMemoryDisplay();
+            cloudLog('✅ Загружено ' + count + ' новых паттернов!', 'success');
+        } else {
+            cloudLog('⚠️ API вернул: ' + response.status, 'warning');
+        }
+    } catch (e) {
+        cloudLog('⚠️ Облако недоступно: ' + e.message, 'warning');
+        cloudLog('💡 Работаю в локальном режиме', 'info');
+    }
+};
+
+// Сохраняем оригинальную функцию локального сохранения
+const originalSaveAbstractPattern = window.saveAbstractPattern;
+
+// Перезаписываем её, добавляя отправку в облако
+window.saveAbstractPattern = async function(pattern) {
+    var isLocalNew = !abstractPatterns.find(function(p) { return p.rule === pattern.rule; });
+    if (isLocalNew) {
+        abstractPatterns.push(pattern);
+        try {
+            localStorage.setItem('pattern_ai_abstract_patterns', JSON.stringify(abstractPatterns));
+            updateMemoryDisplay();
+        } catch (e) { return false; }
+        
+        // Отправляем в облако
+        cloudLog('☁️ Отправка: "' + pattern.rule + '"...', 'info');
+        try {
+            var response = await fetch(CLOUD_API + '/patterns-add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    rule: pattern.rule,
+                    description: pattern.description || 'Нет описания',
+                    category: pattern.category || 'logic',
+                    source: 'hf-v14.2-auto'
+                })
+            });
+            if (response.ok) {
+                cloudLog('✅ Успешно в облаке!', 'success');
+            } else {
+                var err = await response.json().catch(() => ({}));
+                if (err.error && err.error.includes('already exists')) {
+                    cloudLog('⚠️ Уже есть в облаке', 'warning');
+                } else {
+                    cloudLog('❌ Ошибка сервера: ' + (err.error || response.status), 'error');
+                }
+            }
+        } catch (e) {
+            cloudLog('❌ Сетевая ошибка: ' + e.message, 'error');
+        }
+        return true;
+    }
+    return false;
+};
+// === КОНЕЦ МОДУЛЯ v14.2 ===
+
 const GROQ_API_URL_BASE = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS_URL = 'https://api.groq.com/openai/v1/models';
 const HF_CHAT_URL_BASE = 'https://api-inference.huggingface.co/v1/chat/completions';
@@ -468,7 +564,7 @@ function analyzeConcreteness(text) {
   if (text.match(/увеличил на|сократил на|внедрил|разработал|создал|оптимизировал|deliver|reduce|increase/gi)) { concreteCount += 1; foundConcrete.push("Конкретные действия с результатом"); }
   if (text.match(/[А-Я][а-я]+\s+[А-Я][а-я]+/g)) { concreteCount += 1; foundConcrete.push("Имена собственные/названия"); }
 
-  var styleVerdict = "Сбалансированный стиль", styleIcon = "⚖️", styleDesc = "Соотношение абстракций и фактов в пределах нормы.";
+  var styleVerdict = "Сбалансированный стиль", styleIcon = "️", styleDesc = "Соотношение абстракций и фактов в пределах нормы.";
 
   if (fluffCount >= 4 && concreteCount <= 2) {
     styleVerdict = "Высокая абстракция (ИИ-шаблон или вода)"; styleIcon = "⚠️";
@@ -512,8 +608,8 @@ async function loadModels() {
   
   if (currentProvider === 'groq') {
     if (!groqKey || groqKey.length < 20) {
-      addDebugLog('❌ Groq ключ не вставлен', 'error');
-      logToScreen(' Введи Groq ключ!', 'error');
+      addDebugLog(' Groq ключ не вставлен', 'error');
+      logToScreen('⚠️ Введи Groq ключ!', 'error');
       if (statusEl) { statusEl.textContent = '⚠️ Нужен ключ'; statusEl.className = 'api-status disconnected'; }
       return;
     }
@@ -550,7 +646,7 @@ async function loadModels() {
         logToScreen('❌ Ошибка: ' + response.status, 'error');
       }
     } catch (e) {
-      addDebugLog('❌ Исключение: ' + e.message, 'error');
+      addDebugLog(' Исключение: ' + e.message, 'error');
       logToScreen('❌ Ошибка сети: ' + e.message, 'error');
     }
   } else {
@@ -628,7 +724,7 @@ function updateGroqStatus() {
 function updateProxyStatus() {
   var el = document.getElementById('proxy-status');
   if (corsProxy) { el.textContent = '✅ ' + corsProxy.substring(0, 30) + '...'; el.className = 'api-status connected'; }
-  else { el.textContent = '️ Прямой запрос'; el.className = 'api-status disconnected'; }
+  else { el.textContent = '⚠️ Прямой запрос'; el.className = 'api-status disconnected'; }
 }
 
 function buildUrl(baseUrl) {
@@ -880,7 +976,7 @@ function switchMode(mode) {
   }
   
   var modeNames = {system: 'Системы', factcheck: 'Фейки', resume: 'Резюме'};
-  document.getElementById('domain-badge').innerHTML = '🌐 Режим: ' + modeNames[mode] + ' <span class="llm-badge" id="llm-status-badge">LLM: готов</span>';
+  document.getElementById('domain-badge').innerHTML = ' Режим: ' + modeNames[mode] + ' <span class="llm-badge" id="llm-status-badge">LLM: готов</span>';
   updateLLMBadge();
   var queryBox = document.getElementById('query');
   if (mode === 'resume') queryBox.placeholder = 'Вставьте текст резюме...';
@@ -1023,7 +1119,7 @@ function handleSavePattern(idx) {
   if (result) {
     logToScreen('💾 Паттерн сохранён: ' + p.rule, 'success');
   } else {
-    logToScreen('️ Паттерн уже сохранён', 'info');
+    logToScreen('⚠️ Паттерн уже сохранён', 'info');
   }
   refreshAbstractPatternsDisplay();
 }
@@ -1058,20 +1154,20 @@ function displayDebate(debate) {
     }
   }
   if(debate.defender && debate.defender.defense_arguments && debate.defender.defense_arguments.length > 0) {
-    html += '<div class="debate-argument con"><div class="debate-label">🛡️ Защитник:</div><div class="debate-text">' + debate.defender.defense_arguments.join('; ') + '</div></div>';
+    html += '<div class="debate-argument con"><div class="debate-label">️ Защитник:</div><div class="debate-text">' + debate.defender.defense_arguments.join('; ') + '</div></div>';
   }
   if(debate.judge) {
-    var verdictText = debate.judge.verdict, icon = '⚠️';
+    var verdictText = debate.judge.verdict, icon = '️';
     if (currentMode === 'resume') {
       if (verdictText === 'hire') { verdictText = 'ПРИНЯТЬ'; icon = '✅'; }
       else if (verdictText === 'reject') { verdictText = 'ОТКЛОНИТЬ'; icon = '🔴'; }
-      else { verdictText = 'ПРОВЕРИТЬ'; icon = ''; }
+      else { verdictText = 'ПРОВЕРИТЬ'; icon = '🟡'; }
     } else {
       if (verdictText === 'real') { verdictText = 'REAL'; icon = '✅'; }
       else if (verdictText === 'fake') { verdictText = 'FAKE'; icon = '🔴'; }
       else { verdictText = 'UNCERTAIN'; icon = '⚠️'; }
     }
-    html += '<div class="debate-argument" style="border-left-color: #9c27b0;"><div class="debate-label">️ Вердикт:</div><div class="debate-text"><strong>' + icon + ' ' + verdictText + '</strong> — ' + (debate.judge.reasoning || '') + '</div></div>';
+    html += '<div class="debate-argument" style="border-left-color: #9c27b0;"><div class="debate-label">⚖️ Вердикт:</div><div class="debate-text"><strong>' + icon + ' ' + verdictText + '</strong> — ' + (debate.judge.reasoning || '') + '</div></div>';
   }
   return html;
 }
@@ -1275,7 +1371,7 @@ function autoDetectAndApplyDomain(query) {
     currentDomain = detected;
     applyDomainWeights();
     if (currentMode !== 'system') updateWeightsInfo();
-    logToScreen(' Сфера: ' + DOMAINS[detected].name, 'info');
+    logToScreen('🌐 Сфера: ' + DOMAINS[detected].name, 'info');
   }
 }
 
@@ -1345,7 +1441,7 @@ function getAnalysis() {
   try {
     var dom = DOMAINS[currentDomain];
     var modeLabels = {system: 'СИСТЕМЫ', factcheck: 'ФАКТ-ЧЕК', resume: 'РЕЗЮМЕ'};
-    var text = '📊 АНАЛИЗ: ' + modeLabels[currentMode] + ' (v14.1)\n━━━━━━━━━━━━━━━━━━━━━\n';
+    var text = '📊 АНАЛИЗ: ' + modeLabels[currentMode] + ' (v14.2)\n━━━━━━━━━━━━━━━━━━━━━\n';
     text += 'Сфера: ' + dom.name + '\nБалл: ' + document.getElementById('sc').textContent + ' из 1.00\n';
     text += 'Текст: ' + document.getElementById('query').value.length + ' симв.\n';
     text += 'Маркеров: ' + uniqueMarkers + '\nПамять: ' + (userPatterns.length + abstractPatterns.length) + '\nМета: ' + metaPatterns.length + '\n\n';
@@ -1360,8 +1456,8 @@ function getAnalysis() {
       });
       text += '\n';
     }
-    text += '💡 РЕКОМЕНДАЦИИ\n━━━━━━━━━━━━━━━━━━━━━\n ' + (dom.archRecs[document.getElementById('arch-name').textContent] || 'Продолжайте анализ.') + '\n';
-    if(hallucinations.length > 0) text += ' ' + hallucinations.length + ' маркеров\n';
+    text += '💡 РЕКОМЕНДАЦИИ\n━━━━━━━━━━━━━━━━━━━━━\n👉 ' + (dom.archRecs[document.getElementById('arch-name').textContent] || 'Продолжайте анализ.') + '\n';
+    if(hallucinations.length > 0) text += '⚠️ ' + hallucinations.length + ' маркеров\n';
     if(contradictions.found) text += '🔀 Противоречия\n';
     document.getElementById('llm-text').textContent = text;
     document.getElementById('llm-result').style.display = 'block';
@@ -1393,7 +1489,7 @@ function exportToPDF() {
 function exportResults() {
   try {
     var results = {
-      version: '14.1', mode: currentMode, provider: currentProvider, model: selectedModel, proxy: corsProxy, timestamp: new Date().toISOString(),
+      version: '14.2', mode: currentMode, provider: currentProvider, model: selectedModel, proxy: corsProxy, timestamp: new Date().toISOString(),
       text: document.getElementById('query').value, jobDescription: document.getElementById('job-description').value,
       score: parseFloat(document.getElementById('sc').textContent),
       archetype: document.getElementById('arch-name').textContent, domain: currentDomain,
@@ -1407,7 +1503,7 @@ function exportResults() {
     var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
     var a = document.createElement('a'); a.setAttribute("href", dataStr); a.setAttribute("download", "pattern_analysis_" + currentMode + "_" + Date.now() + ".json");
     document.body.appendChild(a); a.click(); a.remove();
-    logToScreen('📥 JSON экспортирован', 'success');
+    logToScreen(' JSON экспортирован', 'success');
   } catch (e) { logToScreen('❌ Ошибка: ' + e.message, 'error'); }
 }
 
@@ -1425,14 +1521,6 @@ function saveUserPattern(pattern) {
   if (!userPatterns.includes(pattern)) {
     userPatterns.push(pattern);
     try { localStorage.setItem('pattern_ai_user_patterns', JSON.stringify(userPatterns)); updateMemoryDisplay(); return true; } catch (e) { return false; }
-  }
-  return false;
-}
-
-function saveAbstractPattern(pattern) {
-  if (!abstractPatterns.find(function(p) { return p.rule === pattern.rule; })) {
-    abstractPatterns.push(pattern);
-    try { localStorage.setItem('pattern_ai_abstract_patterns', JSON.stringify(abstractPatterns)); updateMemoryDisplay(); return true; } catch (e) { return false; }
   }
   return false;
 }
@@ -1457,10 +1545,10 @@ function updateMemoryDisplay() {
     var html = '';
     for (var i = 0; i < abstractPatterns.length; i++) {
       var p = abstractPatterns[i];
-      html += '<div class="pattern-item"><span>🔹 ' + p.rule + ' <span style="color:#888;font-size:10px;">(' + p.category + ')</span></span><button class="delete-btn" onclick="deleteAbstractPattern(\'' + p.rule.replace(/'/g, "\\'") + '\')">🗑️</button></div>';
+      html += '<div class="pattern-item"><span> ' + p.rule + ' <span style="color:#888;font-size:10px;">(' + p.category + ')</span></span><button class="delete-btn" onclick="deleteAbstractPattern(\'' + p.rule.replace(/'/g, "\\'") + '\')">🗑️</button></div>';
     }
     for (var i = 0; i < userPatterns.length; i++) {
-      html += '<div class="pattern-item"><span>📌 ' + userPatterns[i] + '</span><button class="delete-btn" onclick="deleteUserPattern(\'' + userPatterns[i].replace(/'/g, "\\'") + '\')">🗑️</button></div>';
+      html += '<div class="pattern-item"><span> ' + userPatterns[i] + '</span><button class="delete-btn" onclick="deleteUserPattern(\'' + userPatterns[i].replace(/'/g, "\\'") + '\')">🗑️</button></div>';
     }
     if (listEl) listEl.innerHTML = html;
   }
@@ -1471,7 +1559,7 @@ function exportPatternsDB() {
   var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
   var a = document.createElement('a'); a.setAttribute("href", dataStr); a.setAttribute("download", "pattern_ai_database_" + Date.now() + ".json");
   document.body.appendChild(a); a.click(); a.remove();
-  logToScreen(' База экспортирована', 'success');
+  logToScreen('📥 База экспортирована', 'success');
 }
 
 function importPatternsDB(input) {
@@ -1490,18 +1578,18 @@ function importPatternsDB(input) {
       localStorage.setItem('pattern_ai_abstract_patterns', JSON.stringify(abstractPatterns));
       updateMemoryDisplay();
       logToScreen('📤 База импортирована! (Всего: ' + (userPatterns.length + abstractPatterns.length) + ')', 'success');
-    } catch (err) { logToScreen('❌ Ошибка чтения файла', 'error'); }
+    } catch (err) { logToScreen(' Ошибка чтения файла', 'error'); }
   };
   reader.readAsText(file);
 }
 
 var DOMAINS = {
-  health: { name: "🏥 Здоровье", weights: [0.10, 0.15, 0.08, 0.20, 0.05, 0.05, 0.10, 0.12, 0.10, 0.05], descriptions: ["Режим","Поддержка","Экономия сил","Устойчивость","Простота","Отслеживание","Прогресс","Баланс","Комфорт","Перспектива"], keywords: [{pos:["сон","режим","распорядок","регулярн","стабильн","спокойн","ложусь","просыпаюсь","ритм","циркадн","мелатонин"],neg:["бессонниц","хаос","нет режим","сбивает","по 5 часов","недосып","не сплю","проспал","ночью"]},{pos:["друзья","семья","поддержк","вместе","сообщество","тренер","напарник","компаньон","благодар","ценю","признателен","делюсь опытом","помогаю другим","учу других"],neg:["один","изолирован","никто не поддерж","сам","без помощ","никому не нуж"]},{pos:["легк","просто","по силам","без перегруз","постепенн","нетороплив"],neg:["тяжело","на износ","усталост","перегруз","5 раз в недел","жестк","выжимаю"]},{pos:["план б","гибк","без фанатизм","разрешил себе","постепенн","подушк","запас","резерв","стал сильнее после","вырос после кризиса","барбелл"],neg:["все или ничего","сорвалс","бросил","жестк правил","жестк","с понедельника","опять срыв","не выдержал","боюсь перемен"]},{pos:["простые шаг","маленьк","по чуть-чуть","простое","немного"],neg:["сложн систем","много правил","идеальн план","сразу всё","максимум"]},{pos:["чекап","анализы","дневник","замеры","слежу","изучил","отслеж","контрол","вижу возможност","открыт новому","обратная связь","петля обратной связи"],neg:["не знаю","игнорирую","нет данных","не понимаю","вслепую"]},{pos:["улучшаетс","прогресс","становитс легче","адаптируюс","развиваюсь","лучше","радуюсь малому","ценю момент"],neg:["стоит на месте","деградац","топчусь","бросил","нет результата"]},{pos:["тело и разум в согласии","нет внутренней борьб","принятие","спокойн","гармон"],neg:["борьба с собой","ненавиж","заставляю","давят","насиловал себя"]},{pos:["комфортн","без боли","удовольств","забота о себе","здоров","хорошо себя чувств","рад возможностям","ценю то что есть","записываю хорошее"],neg:["боль","страдан","насилие над собой","вредн привычк","травм","травмировал","простуд","заболел","плохо"]},{pos:["на годы","долгосрочн","устойчиво","план","перспектив","буфер","резерв"],neg:["быстрый результат","здесь и сейчас","за месяц","с понедельника","хочу сразу"]}], archetypes: [{name:"Хрупкий Энтузиаст",desc:"Много знаний и резких стартов.",pattern:[0.3,0.3,0.3,0.1,0.5,0.5,0.3,0.2,0.2,0.3]},{name:"Устойчивая Привычка",desc:"Медленный, но верный прогресс.",pattern:[0.7,0.7,0.7,0.8,0.8,0.6,0.7,0.8,0.7,0.6]},{name:"Истощение",desc:"Система работает на последних ресурсах.",pattern:[0.2,0.3,0.2,0.2,0.4,0.3,0.2,0.3,0.1,0.2]},{name:"Переходное состояние",desc:"Система в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Вы создаёте условия для возможностей.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:"🏃 Гиперактивный",desc:"Много активности, но нет системы.",pattern:[0.3,0.4,0.2,0.3,0.4,0.5,0.6,0.4,0.3,0.4]},{name:"🧘 Осознанный Минималист",desc:"Мало действий, но все в точку.",pattern:[0.8,0.6,0.8,0.7,0.9,0.7,0.6,0.7,0.8,0.7]}], archRecs: {"Хрупкий Энтузиаст": "Уберите жесткие правила.", "Устойчивая Привычка": "Вы на правильном пути.", "Истощение": "НЕМЕДЛЕННО сократите нагрузку на 50%.", "Переходное состояние": "Сфокусируйтесь на одном слабом критерии.", " Архитектор Удачи": "Вы мастер серфинга возможностей.", "🏃 Гиперактивный": "Выберите 1 привычку на 30 дней.", "🧘 Осознанный Минималист": "Вы нашли свой ритм."} },
-  business: { name: " Бизнес", weights: [0.16, 0.07, 0.05, 0.18, 0.19, 0.07, 0.03, 0.11, 0.13, 0.01], descriptions: ["Стабильность","Связи","Эффективность","Устойчивость","Простота","Метрики","Рост","Команда","Условия","Стратегия"], keywords: [{pos:["стабильн","регулярн","предсказуем","постоянн","баланс","ровн"],neg:["нестабильн","скачет","то густо то пусто","хаос","рваный","провалы","качели"]},{pos:["клиент","партнёр","партнер","сообщество","нетворк","сарафан","база","аудитория","связи","благодар","ценю","признателен","делюсь опытом","помогаю коллегам","учу других","win-win","взаимовыгодно"],neg:["мало клиент","один клиент","нет партнёр","изолирован","завишу от одного","без клиент","нет клиент","нет клиентов","клиентов мало"]},{pos:["эффектив","оптимиз","автоматиз","быстро","просто","систем","ускор"],neg:["медленно","рутин","бюрократ","траты","лишнее","дублирован","долго"]},{pos:["подушк","резерв","запас","диверсифик","план б","гибк","адаптир","страховк","барбелл-стратеги","стал сильнее после кризиса"],neg:["нет подушк","без запаса","всё в одном","хрупк","рухнет","банкрот","в минусе","минус","боюсь","кассовый разрыв","нет подушки","боюсь перемен","избегаю рисков"]},{pos:["простот","несколько продукт","ниш","направлен","диверсиф","ясн"],neg:["сложн","моно","завишу от одного","единственный","запутан"]},{pos:["метрики","аналитик","отчёт","отчет","данные","трекинг","прозрачн","пониман","цифры","kpi","вижу возможност","открыт новому","обратная связь","петля обратной связи"],neg:["не знаю","нет данных","вслепую","непонятн","туман","на ощупь"]},{pos:["рост","развит","масштаб","инновац","эксперимент","новый продукт","прогресс","посттравматическ рост"],neg:["застой","стагнац","топчемся","устарел","не меняем","стоим"]},{pos:["команд","совместн","слажен","координац","делегир","вместе","делюсь знаниями"],neg:["один тащу","всё на мне","нет команд","саботаж","разобщен","сам","тащу всё"]},{pos:["комфорт","баланс жизнь","отдых","удовольств","нормальн график","рад возможностям","радуюсь малому"],neg:["выгорел","выгораю","12 часов","16 часов","без выходн","на износ","стресс","пашу"]},{pos:["стратеги","долгосрочн","перспектив","видени","roadmap","план на год","цель","буфер","запас прочности"],neg:["без план","сиюминутн","только сейчас","импульсивн","реактивн"]}], archetypes: [{name:"Хрупкий Рост",desc:"Быстро развивается, но может рухнуть.",pattern:[0.3,0.4,0.5,0.2,0.5,0.6,0.8,0.5,0.4,0.5]},{name:"Стабильный Застой",desc:"Надёжен, но не адаптируется.",pattern:[0.8,0.7,0.6,0.6,0.7,0.5,0.3,0.6,0.5,0.5]},{name:"Кризис",desc:"Система на грани выживания.",pattern:[0.2,0.3,0.4,0.3,0.5,0.4,0.3,0.3,0.2,0.3]},{name:"Переходное состояние",desc:"Бизнес в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Вы создаёте условия для возможностей.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:" Фейковый Гуру",desc:"Много красивых слов и выдуманных фактов.",pattern:[0.3,0.3,0.3,0.2,0.4,0.3,0.5,0.3,0.2,0.4]},{name:"🦄 Единорог",desc:"Высокий рост, сильная команда.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.9,0.8,0.7,0.8]},{name:" Медленный Стартап",desc:"Медленный рост, но крепкий фундамент.",pattern:[0.7,0.5,0.6,0.7,0.7,0.6,0.5,0.6,0.6,0.7]}], archRecs: {"Хрупкий Рост": "Фундамент хрупкий.", "Стабильный Застой": "Рискуете устареть.", "Кризис": "НЕМЕДЛЕННО сократите расходы.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Вы мастер серфинга возможностей.", " Фейковый Гуру": "Снимите розовые очки.", "🦄 Единорог": "Не расслабляйтесь.", "🐢 Медленный Стартап": "Не торопитесь."} },
-  code: { name: " Код", weights: [0.08, 0.10, 0.12, 0.22, 0.08, 0.15, 0.10, 0.10, 0.05, 0.05], descriptions: ["Стабильность","Интеграции","Производительность","Устойчивость","Простота","Документация","Развиваемость","Команда","Удобство","Поддержка"], keywords: [{pos:["стабильн","работает","uptime","надёжн","без сбоев","стабильно"],neg:["падает","баги","краши","нестабильн","ломаетс","продакшен падает","упал","сбой"]},{pos:["api","интеграц","зависимост","библиотек","модуль","связи","благодар","ценю вклад","делюсь знаниями","помогаю коллегам"],neg:["монолит","всё связано","нельзя разделить","спагетти"]},{pos:["быстро","оптимиз","производит","кеширован","эффектив","летает"],neg:["медленно","тормозит","долгий запрос","деплой 2 часа","тяжело","виснет"]},{pos:["тесты","покрытие","ci/cd","автотест","rollback","фича флаг","автоматиз","барбелл","стал сильнее после инцидента"],neg:["нет тестов","боимся трогать","легаси","legacy","ручной деплой","один знает","bus factor","тестов нет","покрытия нет","боюсь перемен"]},{pos:["микросервис","модульн","разделен","чистая архитектура","soli","разделён","простот"],neg:["монолит","100к строк","спагетти","бог класс","god object","лапша","сложн"]},{pos:["документ","readme","логи","мониторинг","прозрачн","понятно","комментарии","вижу возможност","обратная связь","петля обратной связи"],neg:["нет документ","устарела","никто не знает","тёмный лес","без описания","документации нет"]},{pos:["рефактор","улучшаем","обновляем","новый стек","эксперимент","развиваем","посттравматическ рост"],neg:["не трогай работает","устарело","legacy","боимся менять","застой"]},{pos:["команд","code review","pair programming","совместн","вместе","парно","делюсь опытом"],neg:["один знает всё","bus factor 1","нет ревью","разобщены","тащу один"]},{pos:["удобно","dx приятн","быстрая сборка","хороший инструментарий","комфортн","рад возможностям","радуюсь малому"],neg:["мучаемс","долгая сборка","плохой dx","раздражает","боль"]},{pos:["поддерживаем","долгосрочн","масштабируем","будущее","устойчиво","буфер","запас прочности"],neg:["костыль","временное решение","технический долг","костыли","хак"]}], archetypes: [{name:"Хрупкий Монолит",desc:"Работает, но любое изменение ломает.",pattern:[0.4,0.3,0.3,0.1,0.2,0.3,0.2,0.4,0.3,0.3]},{name:"Чистая Архитектура",desc:"Модульный, тестируемый код.",pattern:[0.8,0.7,0.8,0.8,0.8,0.8,0.8,0.7,0.8,0.7]},{name:"Легаси-ад",desc:"Старый код, никто не хочет трогать.",pattern:[0.3,0.2,0.2,0.2,0.2,0.2,0.1,0.3,0.2,0.2]},{name:"Переходное состояние",desc:"Кодовая база в процессе рефакторинга.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Код готов к изменениям.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:" Горящий Продакшен",desc:"Всё падает.",pattern:[0.2,0.3,0.2,0.1,0.2,0.2,0.2,0.3,0.1,0.2]}], archRecs: {"Хрупкий Монолит": "Начните с тестов.", "Чистая Архитектура": "Поддерживайте качество.", "Легаси-ад": "Оберните модули в тесты.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Продолжайте инвестировать в тесты.", "🔥 Горящий Продакшен": "СТОП новые фичи. Сначала стабилизация."} },
-  relations: { name: "❤️ Отношения", weights: [0.15, 0.20, 0.08, 0.12, 0.10, 0.15, 0.08, 0.18, 0.12, 0.07], descriptions: ["Баланс","Глубина","Эффективность","Устойчивость","Разнообразие","Открытость","Развитие","Слаженность","Комфорт","Будущее"], keywords: [{pos:["баланс","стабильн","спокойн","гармон","предсказуем","ровно"],neg:["качели","нестабильн","эмоциональные качели","хаос","нервно","штормит"]},{pos:["близость","связь","вместе","общее","партнёр","партнер","доверие","пониман","родной","благодар","ценю","признателен","делюсь чувствами","помогаю партнёру","win-win","взаимовыгодно"],neg:["отдаляемс","чужие","по душам не говорим","разные жизни","соседи","холод","отстран"]},{pos:["говорим","слушаем","слышим","понимаем","договариваемс","диалог"],neg:["не слышит","не понимает","кричим","молчим","не общаемс","игнор","замолкаем"]},{pos:["пережили","справились","гибк","адаптир","прощаем","миримс","договорились","стал сильнее после кризиса","барбелл"],neg:["ссоримс","конфликт","не прощаем","копим обиды","разрушаем","скандал","боюсь перемен"]},{pos:["разнообраз","интересы","путешествия","новое вместе","хобби","приключения"],neg:["однообразно","скучно","только быт","день сурка","рутина"]},{pos:["открыт","честн","говорим о чувствах","прозрачн","доверяем","искренн","вижу возможност","обратная связь","петля обратной связи"],neg:["скрываем","не договариваем","тайны","недоверие","манипуляц","недосказанн"]},{pos:["растём","развиваемс","учимс","меняемся к лучшему","новый опыт","эволюционируем","посттравматическ рост","радуюсь малому"],neg:["топчемс","не меняемс","застой","как раньше","деградируем"]},{pos:["вместе","команда","общая цель","совместн","поддерживаем","партнёрство","делюсь опытом"],neg:["каждый сам","разные цели","тянем в разные стороны","саботаж","противостоим"]},{pos:["комфорт","безопасн","тепло","принятие","радость","удовольств","хорошо вместе","рад тому что есть","ценю момент","записываю хорошее"],neg:["боль","страх","токсичн","абьюз","насилие","манипуляц","холод","тяжело"]},{pos:["будущее","планы","общая цель","семья","дети","долгосрочн","видим вместе","буфер","запас прочности"],neg:["не видим будущего","разные планы","временн","без перспектив","тупик"]}], archetypes: [{name:"Токсичная Зависимость",desc:"Много страданий, мало роста.",pattern:[0.2,0.3,0.3,0.2,0.4,0.3,0.2,0.3,0.1,0.2]},{name:"Растущая Связь",desc:"Есть проблемы, но оба работают.",pattern:[0.6,0.7,0.6,0.7,0.6,0.7,0.7,0.7,0.6,0.7]},{name:"Стабильное Партнёрство",desc:"Зрелые, устойчивые отношения.",pattern:[0.8,0.8,0.7,0.8,0.7,0.8,0.7,0.8,0.8,0.8]},{name:"Переходное состояние",desc:"Отношения в процессе трансформации.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Синергия и глубокая связь.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:"💔 Разрыв",desc:"Отношения на грани расставания.",pattern:[0.2,0.2,0.2,0.2,0.3,0.2,0.2,0.2,0.1,0.2]}], archRecs: {"Токсичная Зависимость": "Установите границы.", "Растущая Связь": "Продолжайте инвестировать в общение.", "Стабильное Партнёрство": "Поддерживайте баланс.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Продолжайте инвестировать в связь.", "💔 Разрыв": "Честно поговорите о будущем."} },
-  finance: { name: "💰 Финансы", weights: [0.15, 0.08, 0.10, 0.20, 0.12, 0.10, 0.08, 0.05, 0.07, 0.05], descriptions: ["Доход","Диверсификация","Бюджет","Подушка","Управление","Грамотность","Рост","Семья","Долги","Планирование"], keywords: [{pos:["стабильн","регулярн","предсказуем","постоянн","зарплат","оклад"],neg:["нестабильн","скачет","то густо то пусто","хаос","нет доход","безработиц","увольнен"]},{pos:["диверсифик","несколько источник","акци","облигац","недвижимост","вклад","разн актив","барбелл-стратеги"],neg:["всё в одном","один источник","только зарплат","только крипта","только акци"]},{pos:["бюджет","учет","эконом","откладываю","коплю","планирую расход"],neg:["трачу всё","не считаю","импульсивн","спонтанн","живу от зарплаты до зарплаты"]},{pos:["подушк","резерв","запас","на черный день","3 месяца","6 месяцев","безопасн","стал сильнее после кризиса","буфер"],neg:["нет подушк","без запаса","всё в долг","кредит","микрозайм","должен","боюсь перемен"]},{pos:["простот","автоматиз","автоплатеж","упростил","понятн","прозрачн"],neg:["сложн","запутан","много счет","не понимаю","где деньги"]},{pos:["грамотн","изучил","читаю","курсы","финансов","инвест","пониман","обратная связь","петля обратной связи","делюсь знаниями"],neg:["не разбираюсь","не понимаю","страх","боюсь","не знаю"]},{pos:["растет","доходность","прибыль","увеличиваетс","капитал","процент","посттравматическ рост"],neg:["падает","убыток","теряю","минус","в просадке","обесцениваетс"]},{pos:["семь","совместн","общий бюджет","договорились","вместе","партнер","win-win","взаимовыгодно"],neg:["ссоримс из-за денег","скрываем","тайн","обман","раздельн"]},{pos:["без долг","закрыл кредит","свободн","чист","нет обязательст","радуюсь малому","ценю момент"],neg:["долг","кредит","ипотек","займ","должен","просрочк","коллектор"]},{pos:["пенсия","долгосрочн","на годы","стратеги","цель","план","будущее","буфер","запас прочности"],neg:["не думаю","живу одним днем","без план","сиюминутн"]}], archetypes: [{name:"Финансовый Хаос",desc:"Деньги приходят и уходят.",pattern:[0.2,0.2,0.2,0.1,0.3,0.2,0.2,0.3,0.1,0.2]},{name:"Осторожный Накопитель",desc:"Стабильно копит, но боится инвестировать.",pattern:[0.7,0.3,0.8,0.7,0.6,0.5,0.2,0.6,0.8,0.5]},{name:"Сбалансированный Инвестор",desc:"Диверсификация, подушка, рост.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.7,0.7,0.8,0.8]},{name:"Переходное состояние",desc:"Финансы в процессе упорядочивания.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Финансовая свобода.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.8,0.7,0.8,0.8]},{name:"💳 Долговая Яма",desc:"Много долгов.",pattern:[0.3,0.2,0.3,0.2,0.4,0.3,0.2,0.3,0.1,0.3]}], archRecs: {"Финансовый Хаос": "Прекратите брать новые долги.", "Осторожный Накопитель": "Изучите облигации.", "Сбалансированный Инвестор": "Продолжайте ребалансировку.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Вы достигли финансовой зрелости.", " Долговая Яма": "Метод снежного кома."} },
-  science: { name: "🎓 Наука", weights: [0.12, 0.10, 0.08, 0.15, 0.10, 0.18, 0.12, 0.10, 0.08, 0.07], descriptions: ["Стабильность","Сообщество","Обучение","Критика","Простота","Данные","Прогресс","Коллаборации","Комфорт","Влияние"], keywords: [{pos:["стабильн","регулярн","постоянн","систематичн","последоват","диссертаци","аспирант","дипломн","научный руководитель","квантов","физик","КПД","подход","публикац","исследован","эксперимент","гипотез","метод","анализ","стать","рецензи","цитиру","импакт","индекс хирш","кафедр","институт","академи","профессор","лаборатор","университет","конференц","доклад","выступлен","теломер","эпигенетич","сайленсинг","омоложен","клиник","пациент","биологич","генетич","молекулярн","клеточн","нейрон","синапс","фермент","белок","ДНК","РНК","CRISPR","ген","дудн","шарпантье","cell","nature","science"],neg:["хаос","беспорядок","нет систем","случайн","рваный график"]},{pos:["коллеги","сообщество","конференц","нетворк","научная группа","лаборатория","университет","благодар","ценю","делюсь знаниями","кафедра","институт","академи","профессор"],neg:["один работаю","изолирован","нет коллег","игнорируют","не признают"]},{pos:["эффектив","быстро усваиваю","оптимиз","понимаю","усвоил","освоил"],neg:["не понимаю","застрял","топчусь","не могу усвоить","туплю"]},{pos:["критика","рецензирование","peer review","гибк","адаптир","принял критику","стал сильнее"],neg:["боюсь критик","игнорирую рецензии","не принимаю","обижаюсь","отклонил без чтения"]},{pos:["простот","ясн","понятн","доступн","упростил","объяснил"],neg:["сложн","запутан","непонятн","перегружен терминами","вода"]},{pos:["данные","метрики","статистик","открыт","прозрачн","воспроизводим","репликац","open data","open science"],neg:["нет данных","скрываю","не публикую","закрыто","недоступно","не воспроизводитс"]},{pos:["прогресс","развит","новое открыти","публикац","статья","цитирован","импакт","рост","эволюционирую"],neg:["застой","нет публикац","отказы","стагнац","топчусь"]},{pos:["совместн","коллаборац","вместе","партнёр","междисциплинарн","win-win","взаимовыгодно"],neg:["один тащу","конкуренц","саботаж","не делюсь","скрываю данные"]},{pos:["комфорт","баланс","радуюсь малому","ценю момент","удовлетворен","интересн"],neg:["выгорел","выгораю","стресс","давят","токсичн","абьюз","на износ"]},{pos:["долгосрочн","вклад","наследие","будущее","влияние","цитируют","план","стратеги","буфер"],neg:["сиюминутн","без план","только сейчас","нет перспектив"]}], archetypes: [{name:"Честный Исследователь",desc:"Строгий метод, прозрачные данные.",pattern:[0.7,0.7,0.7,0.8,0.7,0.8,0.7,0.7,0.7,0.7]},{name:"Академический Мошенник",desc:"Красивые слова, выдуманные данные.",pattern:[0.3,0.3,0.4,0.2,0.3,0.2,0.5,0.3,0.3,0.3]},{name:"Вечный Студент",desc:"Много учится, но мало публикует.",pattern:[0.5,0.4,0.6,0.4,0.5,0.4,0.3,0.4,0.5,0.4]},{name:"Переходное состояние",desc:"Научная карьера в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Создаёт условия для прорывов.",pattern:[0.6, 0.8, 0.6, 0.7, 0.6, 0.8, 0.8, 0.7, 0.7, 0.7]},{name:" Изолированный Гений",desc:"Талантлив, но работает один.",pattern:[0.6,0.2,0.7,0.5,0.6,0.6,0.7,0.2,0.5,0.6]}], archRecs: {"Честный Исследователь": "Продолжайте открытую науку.", "Академический Мошенник": "Хватит выдумывать.", "Вечный Студент": "Напишите хотя бы одну статью.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Продолжайте открывать данные.", "📚 Изолированный Гений": "Найдите коллаборатора."} }
+  health: { name: "🏥 Здоровье", weights: [0.10, 0.15, 0.08, 0.20, 0.05, 0.05, 0.10, 0.12, 0.10, 0.05], descriptions: ["Режим","Поддержка","Экономия сил","Устойчивость","Простота","Отслеживание","Прогресс","Баланс","Комфорт","Перспектива"], keywords: [{pos:["сон","режим","распорядок","регулярн","стабильн","спокойн","ложусь","просыпаюсь","ритм","циркадн","мелатонин"],neg:["бессонниц","хаос","нет режим","сбивает","по 5 часов","недосып","не сплю","проспал","ночью"]},{pos:["друзья","семья","поддержк","вместе","сообщество","тренер","напарник","компаньон","благодар","ценю","признателен","делюсь опытом","помогаю другим","учу других"],neg:["один","изолирован","никто не поддерж","сам","без помощ","никому не нуж"]},{pos:["легк","просто","по силам","без перегруз","постепенн","нетороплив"],neg:["тяжело","на износ","усталост","перегруз","5 раз в недел","жестк","выжимаю"]},{pos:["план б","гибк","без фанатизм","разрешил себе","постепенн","подушк","запас","резерв","стал сильнее после","вырос после кризиса","барбелл"],neg:["все или ничего","сорвалс","бросил","жестк правил","жестк","с понедельника","опять срыв","не выдержал","боюсь перемен"]},{pos:["простые шаг","маленьк","по чуть-чуть","простое","немного"],neg:["сложн систем","много правил","идеальн план","сразу всё","максимум"]},{pos:["чекап","анализы","дневник","замеры","слежу","изучил","отслеж","контрол","вижу возможност","открыт новому","обратная связь","петля обратной связи"],neg:["не знаю","игнорирую","нет данных","не понимаю","вслепую"]},{pos:["улучшаетс","прогресс","становитс легче","адаптируюс","развиваюсь","лучше","радуюсь малому","ценю момент"],neg:["стоит на месте","деградац","топчусь","бросил","нет результата"]},{pos:["тело и разум в согласии","нет внутренней борьб","принятие","спокойн","гармон"],neg:["борьба с собой","ненавиж","заставляю","давят","насиловал себя"]},{pos:["комфортн","без боли","удовольств","забота о себе","здоров","хорошо себя чувств","рад возможностям","ценю то что есть","записываю хорошее"],neg:["боль","страдан","насилие над собой","вредн привычк","травм","травмировал","простуд","заболел","плохо"]},{pos:["на годы","долгосрочн","устойчиво","план","перспектив","буфер","резерв"],neg:["быстрый результат","здесь и сейчас","за месяц","с понедельника","хочу сразу"]}], archetypes: [{name:"Хрупкий Энтузиаст",desc:"Много знаний и резких стартов.",pattern:[0.3,0.3,0.3,0.1,0.5,0.5,0.3,0.2,0.2,0.3]},{name:"Устойчивая Привычка",desc:"Медленный, но верный прогресс.",pattern:[0.7,0.7,0.7,0.8,0.8,0.6,0.7,0.8,0.7,0.6]},{name:"Истощение",desc:"Система работает на последних ресурсах.",pattern:[0.2,0.3,0.2,0.2,0.4,0.3,0.2,0.3,0.1,0.2]},{name:"Переходное состояние",desc:"Система в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:" Архитектор Удачи",desc:"Вы создаёте условия для возможностей.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:"🏃 Гиперактивный",desc:"Много активности, но нет системы.",pattern:[0.3,0.4,0.2,0.3,0.4,0.5,0.6,0.4,0.3,0.4]},{name:"🧘 Осознанный Минималист",desc:"Мало действий, но все в точку.",pattern:[0.8,0.6,0.8,0.7,0.9,0.7,0.6,0.7,0.8,0.7]}], archRecs: {"Хрупкий Энтузиаст": "Уберите жесткие правила.", "Устойчивая Привычка": "Вы на правильном пути.", "Истощение": "НЕМЕДЛЕННО сократите нагрузку на 50%.", "Переходное состояние": "Сфокусируйтесь на одном слабом критерии.", "🍀 Архитектор Удачи": "Вы мастер серфинга возможностей.", "🏃 Гиперактивный": "Выберите 1 привычку на 30 дней.", "🧘 Осознанный Минималист": "Вы нашли свой ритм."} },
+  business: { name: "💼 Бизнес", weights: [0.16, 0.07, 0.05, 0.18, 0.19, 0.07, 0.03, 0.11, 0.13, 0.01], descriptions: ["Стабильность","Связи","Эффективность","Устойчивость","Простота","Метрики","Рост","Команда","Условия","Стратегия"], keywords: [{pos:["стабильн","регулярн","предсказуем","постоянн","баланс","ровн"],neg:["нестабильн","скачет","то густо то пусто","хаос","рваный","провалы","качели"]},{pos:["клиент","партнёр","партнер","сообщество","нетворк","сарафан","база","аудитория","связи","благодар","ценю","признателен","делюсь опытом","помогаю коллегам","учу других","win-win","взаимовыгодно"],neg:["мало клиент","один клиент","нет партнёр","изолирован","завишу от одного","без клиент","нет клиент","нет клиентов","клиентов мало"]},{pos:["эффектив","оптимиз","автоматиз","быстро","просто","систем","ускор"],neg:["медленно","рутин","бюрократ","траты","лишнее","дублирован","долго"]},{pos:["подушк","резерв","запас","диверсифик","план б","гибк","адаптир","страховк","барбелл-стратеги","стал сильнее после кризиса"],neg:["нет подушк","без запаса","всё в одном","хрупк","рухнет","банкрот","в минусе","минус","боюсь","кассовый разрыв","нет подушки","боюсь перемен","избегаю рисков"]},{pos:["простот","несколько продукт","ниш","направлен","диверсиф","ясн"],neg:["сложн","моно","завишу от одного","единственный","запутан"]},{pos:["метрики","аналитик","отчёт","отчет","данные","трекинг","прозрачн","пониман","цифры","kpi","вижу возможност","открыт новому","обратная связь","петля обратной связи"],neg:["не знаю","нет данных","вслепую","непонятн","туман","на ощупь"]},{pos:["рост","развит","масштаб","инновац","эксперимент","новый продукт","прогресс","посттравматическ рост"],neg:["застой","стагнац","топчемся","устарел","не меняем","стоим"]},{pos:["команд","совместн","слажен","координац","делегир","вместе","делюсь знаниями"],neg:["один тащу","всё на мне","нет команд","саботаж","разобщен","сам","тащу всё"]},{pos:["комфорт","баланс жизнь","отдых","удовольств","нормальн график","рад возможностям","радуюсь малому"],neg:["выгорел","выгораю","12 часов","16 часов","без выходн","на износ","стресс","пашу"]},{pos:["стратеги","долгосрочн","перспектив","видени","roadmap","план на год","цель","буфер","запас прочности"],neg:["без план","сиюминутн","только сейчас","импульсивн","реактивн"]}], archetypes: [{name:"Хрупкий Рост",desc:"Быстро развивается, но может рухнуть.",pattern:[0.3,0.4,0.5,0.2,0.5,0.6,0.8,0.5,0.4,0.5]},{name:"Стабильный Застой",desc:"Надёжен, но не адаптируется.",pattern:[0.8,0.7,0.6,0.6,0.7,0.5,0.3,0.6,0.5,0.5]},{name:"Кризис",desc:"Система на грани выживания.",pattern:[0.2,0.3,0.4,0.3,0.5,0.4,0.3,0.3,0.2,0.3]},{name:"Переходное состояние",desc:"Бизнес в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Вы создаёте условия для возможностей.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:"🎭 Фейковый Гуру",desc:"Много красивых слов и выдуманных фактов.",pattern:[0.3,0.3,0.3,0.2,0.4,0.3,0.5,0.3,0.2,0.4]},{name:"🦄 Единорог",desc:"Высокий рост, сильная команда.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.9,0.8,0.7,0.8]},{name:"🐢 Медленный Стартап",desc:"Медленный рост, но крепкий фундамент.",pattern:[0.7,0.5,0.6,0.7,0.7,0.6,0.5,0.6,0.6,0.7]}], archRecs: {"Хрупкий Рост": "Фундамент хрупкий.", "Стабильный Застой": "Рискуете устареть.", "Кризис": "НЕМЕДЛЕННО сократите расходы.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Вы мастер серфинга возможностей.", "🎭 Фейковый Гуру": "Снимите розовые очки.", "🦄 Единорог": "Не расслабляйтесь.", "🐢 Медленный Стартап": "Не торопитесь."} },
+  code: { name: "💻 Код", weights: [0.08, 0.10, 0.12, 0.22, 0.08, 0.15, 0.10, 0.10, 0.05, 0.05], descriptions: ["Стабильность","Интеграции","Производительность","Устойчивость","Простота","Документация","Развиваемость","Команда","Удобство","Поддержка"], keywords: [{pos:["стабильн","работает","uptime","надёжн","без сбоев","стабильно"],neg:["падает","баги","краши","нестабильн","ломаетс","продакшен падает","упал","сбой"]},{pos:["api","интеграц","зависимост","библиотек","модуль","связи","благодар","ценю вклад","делюсь знаниями","помогаю коллегам"],neg:["монолит","всё связано","нельзя разделить","спагетти"]},{pos:["быстро","оптимиз","производит","кеширован","эффектив","летает"],neg:["медленно","тормозит","долгий запрос","деплой 2 часа","тяжело","виснет"]},{pos:["тесты","покрытие","ci/cd","автотест","rollback","фича флаг","автоматиз","барбелл","стал сильнее после инцидента"],neg:["нет тестов","боимся трогать","легаси","legacy","ручной деплой","один знает","bus factor","тестов нет","покрытия нет","боюсь перемен"]},{pos:["микросервис","модульн","разделен","чистая архитектура","soli","разделён","простот"],neg:["монолит","100к строк","спагетти","бог класс","god object","лапша","сложн"]},{pos:["документ","readme","логи","мониторинг","прозрачн","понятно","комментарии","вижу возможност","обратная связь","петля обратной связи"],neg:["нет документ","устарела","никто не знает","тёмный лес","без описания","документации нет"]},{pos:["рефактор","улучшаем","обновляем","новый стек","эксперимент","развиваем","посттравматическ рост"],neg:["не трогай работает","устарело","legacy","боимся менять","застой"]},{pos:["команд","code review","pair programming","совместн","вместе","парно","делюсь опытом"],neg:["один знает всё","bus factor 1","нет ревью","разобщены","тащу один"]},{pos:["удобно","dx приятн","быстрая сборка","хороший инструментарий","комфортн","рад возможностям","радуюсь малому"],neg:["мучаемс","долгая сборка","плохой dx","раздражает","боль"]},{pos:["поддерживаем","долгосрочн","масштабируем","будущее","устойчиво","буфер","запас прочности"],neg:["костыль","временное решение","технический долг","костыли","хак"]}], archetypes: [{name:"Хрупкий Монолит",desc:"Работает, но любое изменение ломает.",pattern:[0.4,0.3,0.3,0.1,0.2,0.3,0.2,0.4,0.3,0.3]},{name:"Чистая Архитектура",desc:"Модульный, тестируемый код.",pattern:[0.8,0.7,0.8,0.8,0.8,0.8,0.8,0.7,0.8,0.7]},{name:"Легаси-ад",desc:"Старый код, никто не хочет трогать.",pattern:[0.3,0.2,0.2,0.2,0.2,0.2,0.1,0.3,0.2,0.2]},{name:"Переходное состояние",desc:"Кодовая база в процессе рефакторинга.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Код готов к изменениям.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:"🔥 Горящий Продакшен",desc:"Всё падает.",pattern:[0.2,0.3,0.2,0.1,0.2,0.2,0.2,0.3,0.1,0.2]}], archRecs: {"Хрупкий Монолит": "Начните с тестов.", "Чистая Архитектура": "Поддерживайте качество.", "Легаси-ад": "Оберните модули в тесты.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Продолжайте инвестировать в тесты.", "🔥 Горящий Продакшен": "СТОП новые фичи. Сначала стабилизация."} },
+  relations: { name: "❤️ Отношения", weights: [0.15, 0.20, 0.08, 0.12, 0.10, 0.15, 0.08, 0.18, 0.12, 0.07], descriptions: ["Баланс","Глубина","Эффективность","Устойчивость","Разнообразие","Открытость","Развитие","Слаженность","Комфорт","Будущее"], keywords: [{pos:["баланс","стабильн","спокойн","гармон","предсказуем","ровно"],neg:["качели","нестабильн","эмоциональные качели","хаос","нервно","штормит"]},{pos:["близость","связь","вместе","общее","партнёр","партнер","доверие","пониман","родной","благодар","ценю","признателен","делюсь чувствами","помогаю партнёру","win-win","взаимовыгодно"],neg:["отдаляемс","чужие","по душам не говорим","разные жизни","соседи","холод","отстран"]},{pos:["говорим","слушаем","слышим","понимаем","договариваемс","диалог"],neg:["не слышит","не понимает","кричим","молчим","не общаемс","игнор","замолкаем"]},{pos:["пережили","справились","гибк","адаптир","прощаем","миримс","договорились","стал сильнее после кризиса","барбелл"],neg:["ссоримс","конфликт","не прощаем","копим обиды","разрушаем","скандал","боюсь перемен"]},{pos:["разнообраз","интересы","путешествия","новое вместе","хобби","приключения"],neg:["однообразно","скучно","только быт","день сурка","рутина"]},{pos:["открыт","честн","говорим о чувствах","прозрачн","доверяем","искренн","вижу возможност","обратная связь","петля обратной связи"],neg:["скрываем","не договариваем","тайны","недоверие","манипуляц","недосказанн"]},{pos:["растём","развиваемс","учимс","меняемся к лучшему","новый опыт","эволюционируем","посттравматическ рост","радуюсь малому"],neg:["топчемс","не меняемс","застой","как раньше","деградируем"]},{pos:["вместе","команда","общая цель","совместн","поддерживаем","партнёрство","делюсь опытом"],neg:["каждый сам","разные цели","тянем в разные стороны","саботаж","противостоим"]},{pos:["комфорт","безопасн","тепло","принятие","радость","удовольств","хорошо вместе","рад тому что есть","ценю момент","записываю хорошее"],neg:["боль","страх","токсичн","абьюз","насилие","манипуляц","холод","тяжело"]},{pos:["будущее","планы","общая цель","семья","дети","долгосрочн","видим вместе","буфер","запас прочности"],neg:["не видим будущего","разные планы","временн","без перспектив","тупик"]}], archetypes: [{name:"Токсичная Зависимость",desc:"Много страданий, мало роста.",pattern:[0.2,0.3,0.3,0.2,0.4,0.3,0.2,0.3,0.1,0.2]},{name:"Растущая Связь",desc:"Есть проблемы, но оба работают.",pattern:[0.6,0.7,0.6,0.7,0.6,0.7,0.7,0.7,0.6,0.7]},{name:"Стабильное Партнёрство",desc:"Зрелые, устойчивые отношения.",pattern:[0.8,0.8,0.7,0.8,0.7,0.8,0.7,0.8,0.8,0.8]},{name:"Переходное состояние",desc:"Отношения в процессе трансформации.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:" Архитектор Удачи",desc:"Синергия и глубокая связь.",pattern:[0.6, 0.7, 0.6, 0.7, 0.6, 0.7, 0.7, 0.6, 0.7, 0.7]},{name:"💔 Разрыв",desc:"Отношения на грани расставания.",pattern:[0.2,0.2,0.2,0.2,0.3,0.2,0.2,0.2,0.1,0.2]}], archRecs: {"Токсичная Зависимость": "Установите границы.", "Растущая Связь": "Продолжайте инвестировать в общение.", "Стабильное Партнёрство": "Поддерживайте баланс.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Продолжайте инвестировать в связь.", "💔 Разрыв": "Честно поговорите о будущем."} },
+  finance: { name: "💰 Финансы", weights: [0.15, 0.08, 0.10, 0.20, 0.12, 0.10, 0.08, 0.05, 0.07, 0.05], descriptions: ["Доход","Диверсификация","Бюджет","Подушка","Управление","Грамотность","Рост","Семья","Долги","Планирование"], keywords: [{pos:["стабильн","регулярн","предсказуем","постоянн","зарплат","оклад"],neg:["нестабильн","скачет","то густо то пусто","хаос","нет доход","безработиц","увольнен"]},{pos:["диверсифик","несколько источник","акци","облигац","недвижимост","вклад","разн актив","барбелл-стратеги"],neg:["всё в одном","один источник","только зарплат","только крипта","только акци"]},{pos:["бюджет","учет","эконом","откладываю","коплю","планирую расход"],neg:["трачу всё","не считаю","импульсивн","спонтанн","живу от зарплаты до зарплаты"]},{pos:["подушк","резерв","запас","на черный день","3 месяца","6 месяцев","безопасн","стал сильнее после кризиса","буфер"],neg:["нет подушк","без запаса","всё в долг","кредит","микрозайм","должен","боюсь перемен"]},{pos:["простот","автоматиз","автоплатеж","упростил","понятн","прозрачн"],neg:["сложн","запутан","много счет","не понимаю","где деньги"]},{pos:["грамотн","изучил","читаю","курсы","финансов","инвест","пониман","обратная связь","петля обратной связи","делюсь знаниями"],neg:["не разбираюсь","не понимаю","страх","боюсь","не знаю"]},{pos:["растет","доходность","прибыль","увеличиваетс","капитал","процент","посттравматическ рост"],neg:["падает","убыток","теряю","минус","в просадке","обесцениваетс"]},{pos:["семь","совместн","общий бюджет","договорились","вместе","партнер","win-win","взаимовыгодно"],neg:["ссоримс из-за денег","скрываем","тайн","обман","раздельн"]},{pos:["без долг","закрыл кредит","свободн","чист","нет обязательст","радуюсь малому","ценю момент"],neg:["долг","кредит","ипотек","займ","должен","просрочк","коллектор"]},{pos:["пенсия","долгосрочн","на годы","стратеги","цель","план","будущее","буфер","запас прочности"],neg:["не думаю","живу одним днем","без план","сиюминутн"]}], archetypes: [{name:"Финансовый Хаос",desc:"Деньги приходят и уходят.",pattern:[0.2,0.2,0.2,0.1,0.3,0.2,0.2,0.3,0.1,0.2]},{name:"Осторожный Накопитель",desc:"Стабильно копит, но боится инвестировать.",pattern:[0.7,0.3,0.8,0.7,0.6,0.5,0.2,0.6,0.8,0.5]},{name:"Сбалансированный Инвестор",desc:"Диверсификация, подушка, рост.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.7,0.7,0.8,0.8]},{name:"Переходное состояние",desc:"Финансы в процессе упорядочивания.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:"🍀 Архитектор Удачи",desc:"Финансовая свобода.",pattern:[0.7,0.8,0.7,0.8,0.7,0.8,0.8,0.7,0.8,0.8]},{name:"💳 Долговая Яма",desc:"Много долгов.",pattern:[0.3,0.2,0.3,0.2,0.4,0.3,0.2,0.3,0.1,0.3]}], archRecs: {"Финансовый Хаос": "Прекратите брать новые долги.", "Осторожный Накопитель": "Изучите облигации.", "Сбалансированный Инвестор": "Продолжайте ребалансировку.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Вы достигли финансовой зрелости.", "💳 Долговая Яма": "Метод снежного кома."} },
+  science: { name: "🎓 Наука", weights: [0.12, 0.10, 0.08, 0.15, 0.10, 0.18, 0.12, 0.10, 0.08, 0.07], descriptions: ["Стабильность","Сообщество","Обучение","Критика","Простота","Данные","Прогресс","Коллаборации","Комфорт","Влияние"], keywords: [{pos:["стабильн","регулярн","постоянн","систематичн","последоват","диссертаци","аспирант","дипломн","научный руководитель","квантов","физик","КПД","подход","публикац","исследован","эксперимент","гипотез","метод","анализ","стать","рецензи","цитиру","импакт","индекс хирш","кафедр","институт","академи","профессор","лаборатор","университет","конференц","доклад","выступлен","теломер","эпигенетич","сайленсинг","омоложен","клиник","пациент","биологич","генетич","молекулярн","клеточн","нейрон","синапс","фермент","белок","ДНК","РНК","CRISPR","ген","дудн","шарпантье","cell","nature","science"],neg:["хаос","беспорядок","нет систем","случайн","рваный график"]},{pos:["коллеги","сообщество","конференц","нетворк","научная группа","лаборатория","университет","благодар","ценю","делюсь знаниями","кафедра","институт","академи","профессор"],neg:["один работаю","изолирован","нет коллег","игнорируют","не признают"]},{pos:["эффектив","быстро усваиваю","оптимиз","понимаю","усвоил","освоил"],neg:["не понимаю","застрял","топчусь","не могу усвоить","туплю"]},{pos:["критика","рецензирование","peer review","гибк","адаптир","принял критику","стал сильнее"],neg:["боюсь критик","игнорирую рецензии","не принимаю","обижаюсь","отклонил без чтения"]},{pos:["простот","ясн","понятн","доступн","упростил","объяснил"],neg:["сложн","запутан","непонятн","перегружен терминами","вода"]},{pos:["данные","метрики","статистик","открыт","прозрачн","воспроизводим","репликац","open data","open science"],neg:["нет данных","скрываю","не публикую","закрыто","недоступно","не воспроизводитс"]},{pos:["прогресс","развит","новое открыти","публикац","статья","цитирован","импакт","рост","эволюционирую"],neg:["застой","нет публикац","отказы","стагнац","топчусь"]},{pos:["совместн","коллаборац","вместе","партнёр","междисциплинарн","win-win","взаимовыгодно"],neg:["один тащу","конкуренц","саботаж","не делюсь","скрываю данные"]},{pos:["комфорт","баланс","радуюсь малому","ценю момент","удовлетворен","интересн"],neg:["выгорел","выгораю","стресс","давят","токсичн","абьюз","на износ"]},{pos:["долгосрочн","вклад","наследие","будущее","влияние","цитируют","план","стратеги","буфер"],neg:["сиюминутн","без план","только сейчас","нет перспектив"]}], archetypes: [{name:"Честный Исследователь",desc:"Строгий метод, прозрачные данные.",pattern:[0.7,0.7,0.7,0.8,0.7,0.8,0.7,0.7,0.7,0.7]},{name:"Академический Мошенник",desc:"Красивые слова, выдуманные данные.",pattern:[0.3,0.3,0.4,0.2,0.3,0.2,0.5,0.3,0.3,0.3]},{name:"Вечный Студент",desc:"Много учится, но мало публикует.",pattern:[0.5,0.4,0.6,0.4,0.5,0.4,0.3,0.4,0.5,0.4]},{name:"Переходное состояние",desc:"Научная карьера в процессе формирования.",pattern:[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},{name:" Архитектор Удачи",desc:"Создаёт условия для прорывов.",pattern:[0.6, 0.8, 0.6, 0.7, 0.6, 0.8, 0.8, 0.7, 0.7, 0.7]},{name:"📚 Изолированный Гений",desc:"Талантлив, но работает один.",pattern:[0.6,0.2,0.7,0.5,0.6,0.6,0.7,0.2,0.5,0.6]}], archRecs: {"Честный Исследователь": "Продолжайте открытую науку.", "Академический Мошенник": "Хватит выдумывать.", "Вечный Студент": "Напишите хотя бы одну статью.", "Переходное состояние": "Сфокусируйтесь на одном критерии.", "🍀 Архитектор Удачи": "Продолжайте открывать данные.", "📚 Изолированный Гений": "Найдите коллаборатора."} }
 };
 
 buildSliders();
@@ -1512,8 +1600,9 @@ updateLLMBadge();
 loadUserPatterns();
 initAPISettings();
 switchMode('system');
-addDebugLog('Pattern AI v14.1 инициализирован', 'success');
-logToScreen('✅ Pattern AI v14.1 готов', 'success');
+addDebugLog('Pattern AI v14.2 Cloud инициализирован', 'success');
+logToScreen('✅ Pattern AI v14.2 Cloud готов', 'success');
+cloudLog('Модуль облачной синхронизации активирован', 'success');
 </script>
 </body>
 </html>
