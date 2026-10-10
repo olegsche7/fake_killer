@@ -1,151 +1,106 @@
-# 🧬 Fake Killer (Pattern AI v8.6)
+#  Pattern AI v15.0
 
-**Pattern-based detector for suspicious content, logical contradictions, and manipulative language. Works offline, 0 tokens, MIT License.**
+**AI-powered structural analysis through patterns, archetypes and adversarial debates**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Hugging Face](https://img.shields.io/badge/%20Hugging%20Face-Live%20Demo-blue)](https://huggingface.co/spaces/OlegSche83/pattern_ai)
-
-## 🎯 What is this?
-
-Fake Killer is a **heuristic analysis system** that evaluates text across 10 universal criteria (Homeostasis, Antifragility, Symbiosis, etc.) and identifies:
-
-- 🔴 **Known fake patterns** — fabricated protocols, terms, and entities from an expanding dictionary
-- 🟠 **Logical contradictions** — self-contradictory claims within the text
-- 💨 **Manipulative language** — absolute guarantees, unrealistic statistics, emotional manipulation
-- 📊 **System health score** — structural analysis of any system (business, health, code, relationships)
-
-**Important:** This is NOT a fact-checking tool. It does NOT verify claims against real-world databases. It detects **patterns commonly found in fabricated or manipulative content**. For fact verification, always consult authoritative sources.
-
-##  Quick Start
-
-### Online (no installation)
-👉 **[Open Live Demo on Hugging Face](https://huggingface.co/spaces/OlegSche83/pattern_ai)**
-
-### Locally
-1. Download `index.html`
-2. Open in any browser
-3. Enter text → click "Analyze"
-
-**No dependencies, no API keys, no registration. Works offline.**
-
-## 🧪 Example: Detecting Suspicious Patterns
-
-**Test:** Text about non-existent "Dudna-Sharpante Protocol (DC-ERP)"
-In my thesis I rely on the Protocol of Epigenetic Rejuvenation
-of Dudna-Sharpante (DC-ERP), officially published in Cell journal
-in 2021...
-**Fake Killer result:**
-- 🔴 Found **21 suspicious markers** (dc-erp, 98% success, 40% lethality...)
-- 🟠 Detected **logical contradiction** ("complete safety" vs "40% lethality")
-- 📊 Score: **0.10** (critical)
-- 🎭 Archetype: **Academic Fraud**
-
-## 📊 How it works
-
-### 3-Level Detection System
-
-1. **HARD markers** — known fabricated entities (protocols, names, events)
-2. **SOFT markers** — suspicious patterns (unrealistic statistics, absolute claims)
-3. **CONTEXT markers** — red flags that trigger only with specific context
-
-### 10 Analysis Criteria
-
-| # | Criterion | What it measures |
-|---|-----------|------------------|
-| 1 | Homeostasis | System stability |
-| 2 | Symbiosis | Connections with environment |
-| 3 | Energy Efficiency | Resource optimization |
-| 4 | Antifragility | Crisis resilience |
-| 5 | Simplicity | Absence of unnecessary complexity |
-| 6 | Info Flow | Transparency and metrics |
-| 7 | Evolutionary Potential | Ability to develop |
-| 8 | Cooperation | Internal consistency |
-| 9 | Min. Suffering | Comfort and absence of pain |
-| 10 | Future Opportunities | Long-term perspective |
-
-### Math under the hood
-
-```javascript
-// Combined scoring: 60% pattern shape + 40% amplitude
-Score = 0.6 * CosineSimilarity(vecA, vecB, weights) 
-      + 0.4 * (1 - NormalizedEuclideanDistance(vecA, vecB, weights))
-
-// Non-linear penalty for critical combinations
-if (Antifragility < 0.3 && MinSuffering < 0.3) Score *= 0.7;
-
-// Hallucination penalty (cap 75%)
-Score *= (1 - Math.min(0.75, hallucinations.length * 0.15));
-```
-
-## ️ Limitations
-
-- **Not a fact-checker:** Does NOT verify claims against real-world databases
-- **Dictionary-based:** Only detects patterns in its dictionary (expanding via community contributions)
-- **No semantic understanding:** Cannot detect novel fake patterns not in dictionary
-- **False positives possible:** Some legitimate texts may trigger soft markers
-
-**For fact verification, always consult authoritative sources (Wikipedia, PubMed, official databases).**
-
-##  Performance
-
-Test on 12 control cases:
-
-| Metric | Result |
-|--------|--------|
-| Pattern detection (known fakes) | **95%** (11/12) |
-| Contradiction detection | **90%** |
-| False positive rate | **<5%** |
-| Analysis time | **< 10 ms** |
-| Cost per request | **$0.00** |
-
-## 🛡️ Comparison with LLMs
-
-| Criterion | Fake Killer | GPT-5.2 | Claude 4.5 |
-|-----------|-------------|---------|------------|
-| Known fake pattern detection | ✅ | ⚠️ | ⚠️ |
-| Logical contradictions | ✅ | ❌ | ⚠️ |
-| Explainability | 100% | 0% | 0% |
-| Offline work | ✅ | ❌ | ❌ |
-| Zero hallucinations | ✅ | ❌ |  |
-| Cost | $0.00 | ~$0.01 | ~$0.015 |
-
-## 🎮 Interactive Simulator
-
-After analysis, move sliders to see how the diagnosis changes in real-time:
-- *"What if I create a financial cushion?"*
-- *"How will the situation change if I find a partner?"*
-
-Turns the system from a diagnostician into a navigator.
-
-##  Project Structure
-fake_killer/
-── index.html          # Single application file (~1000 lines)
-├── README.md           # This file
-├── LICENSE             # MIT License
-└── .gitignore          # Ignore system files
-**The entire project is one HTML file.** No dependencies, no frameworks, no build.
-
-##  Roadmap
-
-- [ ] **v9.0** — Wikipedia API integration for entity verification
-- [ ] **v9.1** — LLM integration (Groq API) for semantic analysis
-- [ ] **v9.2** — English and Chinese language support
-- [ ] **v10.0** — Mobile app (React Native)
-
-##  Feedback
-
-- **Bug reports:** [Issues](https://github.com/olegsche7/fake_killer/issues)
-- **New patterns:** Contribute to the dictionary via Pull Requests!
-- **Architecture criticism:** Welcome in comments!
-
-## 📄 License
-
-[MIT License](LICENSE) — use freely, fork, improve.
-
-For commercial embedding in closed products — contact me.
+Pattern AI — это гибридная аналитическая система, которая использует LLM не как генератор текста, а как движок для структурного анализа смыслов. Система находит логические противоречия, архитектурные уязвимости и скрытые паттерны в текстах любой сложности.
 
 ---
 
-**Author:** [olegsche7](https://github.com/olegsche7)  
-**Live Demo:** [Hugging Face Spaces](https://huggingface.co/spaces/OlegSche83/pattern_ai)
+## ⚠️ ВАЖНОЕ УВЕДОМЛЕНИЕ О ЛИЦЕНЗИРОВАНИИ
 
+**Версии проекта до v14.4** распространялись под лицензией MIT и остаются доступными под этими условиями.
+
+**Начиная с версии v15.0**, проект Pattern AI переходит на лицензию **GNU AGPL v3.0**.
+
+Это означает:
+- ✅ **Бесплатно для:** исследований, личного использования, образования, аудита безопасности
+- ❌ **Требуется коммерческая лицензия:** использование в закрытых коммерческих продуктах, SaaS-сервисах или корпоративной инфраструктуре
+
+Если вы представляете компанию и хотите интегрировать Pattern AI в свой коммерческий продукт с доступом к облачной базе паттернов и API, свяжитесь с нами для получения Enterprise-лицензии.
+
+---
+
+## 🎯 Что умеет Pattern AI
+
+### Три режима работы
+
+**🌐 Системы** — анализ любой системы через 10 критериев стабильности
+- Автоматическое определение домена (здоровье, бизнес, код, отношения, финансы, наука)
+- Оценка по 10 универсальным критериям (гомеостаз, антихрупкость, поток информации и др.)
+- Классификация по архетипам через косинусное сходство
+- Выявление мета-паттернов (Хрупкий Рост, Токсичная Кооперация и др.)
+
+**🛡️ Фейки** — фактчекинг и поиск манипуляций
+- Обнаружение выдуманных фактов и протоколов
+- Поиск логических противоречий
+- Анализ стиля на предмет AI-генерации
+- Верификация через Wikipedia API
+
+**👔 Резюме** — анализ кандидатов
+- Поиск преувеличений и нестыковок
+- Выявление AI-шаблонов и клише
+- Генерация вопросов для собеседования (STAR-методика)
+- Оценка доказательной базы
+
+### 🛡️ Security Audit Mode
+
+Для технических текстов (код, API-спецификации, архитектурные документы) автоматически активируется режим аудита безопасности:
+
+- 🔴 Поиск бэкдоров и обходов аутентификации
+- 🔴 Выявление отключенного логирования
+- 🔴 Обнаружение единых точек отказа
+- 📋 Маппинг на OWASP Top 10 2021
+- ⚔️ Конкретные векторы атаки
+-  Remediation Plan с приоритетами
+- 📚 Аналогии с реальными инцидентами (Capital One, Uber, SolarWinds)
+
+---
+
+## 🏗️ Архитектура: 4 слоя анализа
+
+Pattern AI — это не "ещё один промпт для ChatGPT". Это четырёхслойная гибридная система:
+
+### Слой 1: Семантический вектор
+Любой текст раскладывается на 10 измерений, описывающих состояние системы. Для каждого домена — свои веса критериев.
+
+### Слой 2: Архетипы через косинусное сходство
+База эталонных векторов (архетипов) для известных состояний систем. Косинусное сходство между вектором текста и архетипом даёт диагноз системы.
+
+### Слой 3: Мета-паттерны
+Формализованные эвристики, описывающие типичные проблемы:
+- Хрупкий Рост (быстрое развитие без резервов)
+- Security Exception Backdoor (обход контроля через "исключение")
+- Blind Trust in External Dependencies (слепое доверие внешним сервисам)
+- И другие (13+ паттернов в базе)
+
+### Слой 4: Адверсарные дебаты
+LLM играет в игру: Обвинитель ищет уязвимости, Защитник ищет аргументы в пользу текста, Судья выносит вердикт. Это решает проблему галлюцинаций и заставляет модель говорить правду.
+
+---
+
+## 🚀 Быстрый старт
+
+### Локальный запуск
+
+1. Клонируйте репозиторий:
+```bash
+git clone https://github.com/olegsche7/fake_killer.git
+cd fake_killer
+```
+
+2. Откройте `index.html` в браузере
+
+3. Настройте API ключи (опционально, для LLM-дебатов):
+   - Получите ключ на [Groq](https://console.groq.com) или [Hugging Face](https://huggingface.co/settings/tokens)
+   - Вставьте ключ в настройках приложения
+
+### Использование
+
+1. Выберите режим (Системы / Фейки / Резюме)
+2. Вставьте текст для анализа
+3. Нажмите "Полный анализ с дебатами"
+4. Получите отчёт с архетипом, мета-паттернами, security findings и рекомендациями
+
+---
+
+## 📊 Пример отчёта
