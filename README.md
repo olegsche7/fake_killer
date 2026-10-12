@@ -1,106 +1,69 @@
-#  Pattern AI v15.0
+#  Pattern AI
 
-**AI-powered structural analysis through patterns, archetypes and adversarial debates**
+**Agentic Oversight for Architecture, Code & Truth**
 
-Pattern AI — это гибридная аналитическая система, которая использует LLM не как генератор текста, а как движок для структурного анализа смыслов. Система находит логические противоречия, архитектурные уязвимости и скрытые паттерны в текстах любой сложности.
+Pattern AI is a hybrid AI-audit system that finds logical contradictions, security vulnerabilities, and manipulative language in technical documentation *before* code is written. It combines LLM-adversarial debates with deterministic pattern-matching to deliver verifiable, exit-code-ready verdicts.
 
----
-
-## ⚠️ ВАЖНОЕ УВЕДОМЛЕНИЕ О ЛИЦЕНЗИРОВАНИИ
-
-**Версии проекта до v14.4** распространялись под лицензией MIT и остаются доступными под этими условиями.
-
-**Начиная с версии v15.0**, проект Pattern AI переходит на лицензию **GNU AGPL v3.0**.
-
-Это означает:
-- ✅ **Бесплатно для:** исследований, личного использования, образования, аудита безопасности
-- ❌ **Требуется коммерческая лицензия:** использование в закрытых коммерческих продуктах, SaaS-сервисах или корпоративной инфраструктуре
-
-Если вы представляете компанию и хотите интегрировать Pattern AI в свой коммерческий продукт с доступом к облачной базе паттернов и API, свяжитесь с нами для получения Enterprise-лицензии.
+[![Version](https://img.shields.io/badge/version-15.4-blue)]()
+[![License](https://img.shields.io/badge/license-Apache--2.0-green)]()
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Space-yellow)](https://huggingface.co/spaces/YOUR_USERNAME/pattern-ai)
+[![LLM](https://img.shields.io/badge/LLM-Groq+%2B+HF-orange)]()
 
 ---
 
-## 🎯 Что умеет Pattern AI
+## 🎯 What It Does
 
-### Три режима работы
+Most SAST/DAST tools scan **code**. Pattern AI scans **intent**.
 
-**🌐 Системы** — анализ любой системы через 10 критериев стабильности
-- Автоматическое определение домена (здоровье, бизнес, код, отношения, финансы, наука)
-- Оценка по 10 универсальным критериям (гомеостаз, антихрупкость, поток информации и др.)
-- Классификация по архетипам через косинусное сходство
-- Выявление мета-паттернов (Хрупкий Рост, Токсичная Кооперация и др.)
+It reads architecture descriptions, READMEs, ADRs, and technical specs — and catches the contradictions that slip past human reviewers and AI agents alike:
 
-**🛡️ Фейки** — фактчекинг и поиск манипуляций
-- Обнаружение выдуманных фактов и протоколов
-- Поиск логических противоречий
-- Анализ стиля на предмет AI-генерации
-- Верификация через Wikipedia API
+- *"High availability"* backed by a single PostgreSQL master with async replication
+- *"Automatic failover"* that actually requires a 4-hour manual DNS switch
+- *"ACID-compliant payments"* with data-loss risks baked into the replication strategy
 
-**👔 Резюме** — анализ кандидатов
-- Поиск преувеличений и нестыковок
-- Выявление AI-шаблонов и клише
-- Генерация вопросов для собеседования (STAR-методика)
-- Оценка доказательной базы
-
-### 🛡️ Security Audit Mode
-
-Для технических текстов (код, API-спецификации, архитектурные документы) автоматически активируется режим аудита безопасности:
-
-- 🔴 Поиск бэкдоров и обходов аутентификации
-- 🔴 Выявление отключенного логирования
-- 🔴 Обнаружение единых точек отказа
-- 📋 Маппинг на OWASP Top 10 2021
-- ⚔️ Конкретные векторы атаки
--  Remediation Plan с приоритетами
-- 📚 Аналогии с реальными инцидентами (Capital One, Uber, SolarWinds)
+**Result:** A structured JSON report with OWASP-mapped findings, concrete attack vectors, and `exit code 1` when critical flaws are detected — ready to plug into any CI/CD pipeline.
 
 ---
 
-## 🏗️ Архитектура: 4 слоя анализа
+## ✨ Key Features
 
-Pattern AI — это не "ещё один промпт для ChatGPT". Это четырёхслойная гибридная система:
+### 🔍 Triple-Mode Analysis
+- **🌐 Systems** — Architecture, infrastructure, business logic audit
+- **️ Fact-check** — Detects fake facts, pseudo-science, and manipulative claims
+- **👔 Resume** — Validates technical claims in CVs using STAR-method questioning
 
-### Слой 1: Семантический вектор
-Любой текст раскладывается на 10 измерений, описывающих состояние системы. Для каждого домена — свои веса критериев.
+### ⚖️ Adversarial LLM Debates
+Three AI agents play distinct roles:
+1. **Prosecutor** — Finds contradictions, fake facts, and manipulations
+2. **Defender** — Argues for the text's honesty and technical validity
+3. **Judge** — Delivers a weighted verdict with confidence score
 
-### Слой 2: Архетипы через косинусное сходство
-База эталонных векторов (архетипов) для известных состояний систем. Косинусное сходство между вектором текста и архетипом даёт диагноз системы.
+### 🛡️ Security Audit with OWASP Mapping
+Automatic detection of:
+- Single Points of Failure (SPOF)
+- Insecure fallbacks & missing circuit breakers
+- Auth bypass & privilege escalation risks
+- Logging gaps & audit trail violations
 
-### Слой 3: Мета-паттерны
-Формализованные эвристики, описывающие типичные проблемы:
-- Хрупкий Рост (быстрое развитие без резервов)
-- Security Exception Backdoor (обход контроля через "исключение")
-- Blind Trust in External Dependencies (слепое доверие внешним сервисам)
-- И другие (13+ паттернов в базе)
+Every finding is mapped to **OWASP Top 10 2021** with concrete attack vectors and remediation steps.
 
-### Слой 4: Адверсарные дебаты
-LLM играет в игру: Обвинитель ищет уязвимости, Защитник ищет аргументы в пользу текста, Судья выносит вердикт. Это решает проблему галлюцинаций и заставляет модель говорить правду.
+###  13+ Meta-Patterns
+Pre-built detection rules for systemic risks:
+- `Security Exception Backdoor`
+- `Silent Single Point of Failure`
+- `Blind Trust in External Dependencies`
+- `Audit Bypass Justification`
+- `Security Through Obscurity`
+- And more...
 
----
+###  10-Criteria Stability Profile
+Weighted evaluation across: Homeostasis, Symbiosis, Energy Efficiency, Antifragility, Simplicity, Information Flow, Evolutionary Potential, Cooperation, Minimum Suffering, Future Potential.
 
-## 🚀 Быстрый старт
-
-### Локальный запуск
-
-1. Клонируйте репозиторий:
-```bash
-git clone https://github.com/olegsche7/fake_killer.git
-cd fake_killer
-```
-
-2. Откройте `index.html` в браузере
-
-3. Настройте API ключи (опционально, для LLM-дебатов):
-   - Получите ключ на [Groq](https://console.groq.com) или [Hugging Face](https://huggingface.co/settings/tokens)
-   - Вставьте ключ в настройках приложения
-
-### Использование
-
-1. Выберите режим (Системы / Фейки / Резюме)
-2. Вставьте текст для анализа
-3. Нажмите "Полный анализ с дебатами"
-4. Получите отчёт с архетипом, мета-паттернами, security findings и рекомендациями
+### 🧠 Self-Learning Pattern Library
+- Local + cloud-synced abstract pattern database
+- Patterns auto-save from LLM analysis
+- Export/import pattern databases as JSON
 
 ---
 
-## 📊 Пример отчёта
+## ️ Architecture
